@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lịch Việt (Vạn Niên)</string>
+
+    <!-- Navigation Tabs -->
+    <string name="nav_day">Lịch Ngày</string>
+    <string name="nav_month">Lịch Tháng</string>
+    <string name="nav_convert">Đổi Ngày</string>
+    <string name="nav_horoscope">Tử Vi</string>
+    <string name="nav_more">Mở Rộng</string>
+
+    <!-- Day Screen -->
+    <string name="today">Hôm nay</string>
+    <string name="month_format">Tháng %02d - %d</string>
+    <string name="lunar_month_format">Tháng %d</string>
+    <string name="lunar_month_leap_format">Tháng %d (Nhuận)</string>
+    <string name="ngay_can_chi_format">Ng. %s</string>
+    <string name="thang_can_chi_format">Th. %s</string>
+    <string name="nam_can_chi_format">Năm %s</string>
+    <string name="quote_author_default">Thành ngữ Việt Nam</string>
+
+    <!-- Date Converter -->
+    <string name="title_convert">Đổi ngày - Tìm ngày</string>
+    <string name="tab_convert_date">Đổi ngày</string>
+    <string name="tab_find_good_day">Tìm ngày tốt</string>
+    <string name="solar_calendar_title">Dương Lịch</string>
+    <string name="lunar_calendar_title">Âm Lịch</string>
+    <string name="btn_view_day_detail">Xem chi tiết ngày</string>
+    <string name="select_good_day_purpose">Chọn việc cần làm:</string>
+
+    <!-- Horoscope -->
+    <string name="title_horoscope">Tử vi</string>
+    <string name="horoscope_year">Tử vi năm %d</string>
+    <string name="horoscope_lifetime">Tử vi trọn đời</string>
+    <string name="horoscope_stars">Xem sao\nCoi hạn</string>
+    <string name="horoscope_divination">Bói phương\nđông</string>
+    <string name="horoscope_good_bad_days">Xem ngày\ntốt - xấu</string>
+    <string name="horoscope_age_match">Xem tuổi</string>
+    <string name="horoscope_lucky_day">Ngày đẹp\ntheo tuổi</string>
+    <string name="horoscope_feng_shui">Phong thủy\nnhà ở</string>
+
+    <!-- Day Detail -->
+    <string name="title_day_detail">Chi tiết ngày</string>
+    <string name="section_lunar_calendar">LỊCH ÂM</string>
+    <string name="column_day">NGÀY</string>
+    <string name="column_month">THÁNG</string>
+    <string name="column_year">NĂM</string>
+    <string name="section_events">SỰ KIỆN</string>
+    <string name="no_events">Không có sự kiện đặc biệt trong ngày này.</string>
+    <string name="section_hoang_dao_hours">GIỜ HOÀNG ĐẠO</string>
+    <string name="section_departure_direction">HƯỚNG XUẤT HÀNH</string>
+    <string name="hy_than_format">- Hỷ Thần: %s</string>
+    <string name="tai_than_format">- Tài Thần: %s</string>
+    <string name="hac_than_format">- Hạc Thần (nên tránh): %s</string>
+    <string name="section_stars">SAO TỐT - SAO XẤU</string>
+    <string name="good_stars_label">Sao Tốt: </string>
+    <string name="bad_stars_label">Sao Xấu: </string>
+    <string name="recommended_actions_label">Nên làm: </string>
+    <string name="avoid_actions_label">Kiêng cữ: </string>
+    <string name="tiet_khi_label">Tiết khí: </string>
+    <string name="truc_label">Trực: </string>
+
+    <!-- Weather -->
+    <string name="default_city">Hà Nội</string>
+    <string name="rain_prob_uv_format">Khả năng có mưa: %d%% - UV: %s</string>
+    <string name="air_quality_format">Chất lượng không khí: %s</string>
+    <string name="next_6_hours">Thời tiết 6 giờ tiếp theo</string>
+    <string name="next_7_days">Dự báo 7 ngày tới</string>
+    <string name="temp_min_max_format">↓ %d°C    ↑ %d°C</string>
+    <string name="temp_format">%d°</string>
+
+    <!-- More / Utilities -->
+    <string name="title_more">Mở Rộng &amp; Tiện Ích</string>
+    <string name="util_thuoc_lo_ban">Thước Lỗ Ban</string>
+    <string name="util_van_khan">Văn khấn cổ truyền</string>
+    <string name="util_reminders">Cài đặt nhắc ngày Rằm, Mùng 1</string>
+    <string name="util_change_bg">Đổi hình nền dân gian</string>
+    <string name="util_about">Giới thiệu ứng dụng</string>
+    <string name="app_version">Phiên bản 1.0.0 (Hỗ trợ Android 8.0+)</string>
+
+    <!-- Days of week -->
+    <string name="day_monday">THỨ HAI</string>
+    <string name="day_tuesday">THỨ BA</string>
+    <string name="day_wednesday">THỨ TƯ</string>
+    <string name="day_thursday">THỨ NĂM</string>
+    <string name="day_friday">THỨ SÁU</string>
+    <string name="day_saturday">THỨ BẢY</string>
+    <string name="day_sunday">CHỦ NHẬT</string>
+
+    <string name="hoang_dao_tag">Hoàng Đạo</string>
+    <string name="hac_dao_tag">Hắc Đạo</string>
+</resources>

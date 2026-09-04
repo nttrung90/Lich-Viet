@@ -1,0 +1,15 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="36dp"
+    android:height="36dp"
+    android:viewportWidth="36"
+    android:viewportHeight="36">
+    <!-- Circle border -->
+    <path
+        android:strokeColor="#3F51B5"
+        android:strokeWidth="1.5"
+        android:pathData="M18,3A15,15 0,1,0 18,33A15,15 0,1,0 18,3Z" />
+    <!-- Person avatar -->
+    <path
+        android:fillColor="#3F51B5"
+        android:pathData="M18,9a4.5,4.5 0,1,0 0,9a4.5,4.5 0,1,0 0,-9zm0,12c-4,0 -8.5,2 -8.5,5.5v2.5h17v-2.5c0,-3.5 -4.5,-5.5 -8.5,-5.5z" />
+</vector>

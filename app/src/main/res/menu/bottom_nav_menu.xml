@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_day"
+        android:icon="@drawable/ic_nav_day"
+        android:title="@string/nav_day" />
+
+    <item
+        android:id="@+id/navigation_month"
+        android:icon="@drawable/ic_nav_month"
+        android:title="@string/nav_month" />
+
+    <item
+        android:id="@+id/navigation_convert"
+        android:icon="@drawable/ic_nav_convert"
+        android:title="@string/nav_convert" />
+
+    <item
+        android:id="@+id/navigation_horoscope"
+        android:icon="@drawable/ic_yin_yang"
+        android:title="@string/nav_horoscope" />
+
+    <item
+        android:id="@+id/navigation_more"
+        android:icon="@drawable/ic_nav_more"
+        android:title="@string/nav_more" />
+</menu>

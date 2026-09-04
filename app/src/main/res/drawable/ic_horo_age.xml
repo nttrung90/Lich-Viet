@@ -1,0 +1,24 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="36dp"
+    android:height="36dp"
+    android:viewportWidth="36"
+    android:viewportHeight="36">
+    <!-- Calendar with spiral binder -->
+    <path
+        android:strokeColor="#3F51B5"
+        android:strokeWidth="1.5"
+        android:pathData="M6,10h24v18h-24z" />
+    <path
+        android:strokeColor="#3F51B5"
+        android:strokeWidth="1.5"
+        android:pathData="M6,16h24" />
+    <!-- Spiral loops -->
+    <path
+        android:strokeColor="#3F51B5"
+        android:strokeWidth="1.2"
+        android:pathData="M9,7v4M13,7v4M17,7v4M21,7v4M25,7v4" />
+    <!-- Inner 1990 text representation -->
+    <path
+        android:fillColor="#3F51B5"
+        android:pathData="M11,21h2v4h-2zM15,21h3v2h-3zM15,23h3v2h-3zM20,21h3v2h-3zM20,23h3v2h-3z" />
+</vector>

@@ -1,0 +1,25 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="36dp"
+    android:height="36dp"
+    android:viewportWidth="36"
+    android:viewportHeight="36">
+    <path
+        android:strokeColor="#3F51B5"
+        android:strokeWidth="1.5"
+        android:pathData="M7,8h22v20h-22z" />
+    <path
+        android:strokeColor="#3F51B5"
+        android:strokeWidth="1.5"
+        android:pathData="M7,14h22" />
+    <path
+        android:strokeColor="#3F51B5"
+        android:strokeWidth="1.5"
+        android:pathData="M12,5v4M24,5v4" />
+    <!-- Lucky star and animal emblem -->
+    <path
+        android:fillColor="#3F51B5"
+        android:pathData="M13,20a4,4 0,1,0 0,6a4,4 0,1,0 0,-6z" />
+    <path
+        android:fillColor="#FF8F00"
+        android:pathData="M23,20l1,2 2,0 -1.5,1.5 0.5,2 -2,-1 -2,1 0.5,-2 -1.5,-1.5 2,0z" />
+</vector>

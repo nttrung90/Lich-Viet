@@ -1,0 +1,27 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="36dp"
+    android:height="36dp"
+    android:viewportWidth="36"
+    android:viewportHeight="36">
+    <!-- Calendar shape -->
+    <path
+        android:strokeColor="#3F51B5"
+        android:strokeWidth="1.5"
+        android:pathData="M7,8h22v20h-22z" />
+    <path
+        android:strokeColor="#3F51B5"
+        android:strokeWidth="1.5"
+        android:pathData="M7,14h22" />
+    <path
+        android:strokeColor="#3F51B5"
+        android:strokeWidth="1.5"
+        android:pathData="M12,5v4M24,5v4" />
+    <!-- Star and warning triangle -->
+    <path
+        android:fillColor="#FF8F00"
+        android:pathData="M13,24l1,-3 3,0 -2.5,2 1,3 -2.5,-2 -2.5,2 1,-3z" />
+    <path
+        android:strokeColor="#D32F2F"
+        android:strokeWidth="1.2"
+        android:pathData="M23,17L28,26H18L23,17Z" />
+</vector>

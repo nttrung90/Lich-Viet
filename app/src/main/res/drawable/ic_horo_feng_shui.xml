@@ -1,0 +1,15 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="36dp"
+    android:height="36dp"
+    android:viewportWidth="36"
+    android:viewportHeight="36">
+    <!-- House outline -->
+    <path
+        android:strokeColor="#3F51B5"
+        android:strokeWidth="1.5"
+        android:pathData="M18,5 L31,16 L28,16 L28,31 L8,31 L8,16 L5,16 Z" />
+    <!-- Bagua/Yin Yang inside house -->
+    <path
+        android:fillColor="#3F51B5"
+        android:pathData="M18,19a4,4 0,1,0 0,8a4,4 0,1,0 0,-8zm0,4a2,2 0,0,1 0,-4a2,2 0,0,0 0,4z" />
+</vector>

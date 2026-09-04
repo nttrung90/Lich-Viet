@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Sky gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#8CE0FE"
+                android:centerColor="#B8F2E6"
+                android:endColor="#89E47A"
+                android:angle="270" />
+        </shape>
+    </item>
+    <!-- Soft meadow overlay at bottom -->
+    <item android:top="280dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#0072BB53"
+                android:endColor="#D95CB85C"
+                android:angle="270" />
+        </shape>
+    </item>
+</layer-list>

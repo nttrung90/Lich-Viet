@@ -1,0 +1,19 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="36dp"
+    android:height="36dp"
+    android:viewportWidth="36"
+    android:viewportHeight="36">
+    <!-- Octagon Bagua boundary -->
+    <path
+        android:fillColor="#E8EAF6"
+        android:strokeColor="#3F51B5"
+        android:strokeWidth="1.5"
+        android:pathData="M11,3 L25,3 L33,11 L33,25 L25,33 L11,33 L3,25 L3,11 Z" />
+    <!-- Inner Yin Yang -->
+    <path
+        android:fillColor="#3F51B5"
+        android:pathData="M18,9A9,9 0,0,0 18,27A9,9 0,0,0 18,9ZM18,18A4.5,4.5 0,0,1 18,9A4.5,4.5 0,0,0 18,18Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M18,9A9,9 0,0,1 18,27A4.5,4.5 0,0,1 18,18A4.5,4.5 0,0,0 18,9Z" />
+</vector>
