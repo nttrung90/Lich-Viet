@@ -47,6 +47,10 @@ object WeatherRepository {
         "Vĩnh Long", "Vĩnh Phúc", "Yên Bái"
     )
 
+    var currentSelectedCity: String = "Hà Nội"
+
+    fun getCurrentWeather(): WeatherForecast = getWeatherForCity(currentSelectedCity)
+
     fun getWeatherForCity(cityName: String): WeatherForecast {
         val baseTemp = when (cityName) {
             "TP. Hồ Chí Minh", "Cần Thơ", "Cà Mau" -> 32

@@ -69,7 +69,7 @@
         android:layout_marginBottom="8dp"
         android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/layout_tabs"
-        app:layout_constraintBottom_toTopOf="@id/bottom_banner_convert"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -243,34 +243,5 @@
 
         </LinearLayout>
     </ScrollView>
-
-    <!-- Bottom Orange Banner (Đổi Ngày Âm - Dương) -->
-    <LinearLayout
-        android:id="@+id/bottom_banner_convert"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:background="#FF6B00"
-        android:orientation="vertical"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <!-- Top Yellow Stripe -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:background="#FFD700" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Đổi Ngày Âm - Dương"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.03" />
-
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

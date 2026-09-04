@@ -39,7 +39,8 @@ class GoodDayAdapter(
             text1.setTextColor(android.graphics.Color.parseColor("#1B5E20"))
             text1.setTypeface(null, android.graphics.Typeface.BOLD)
 
-            text2.text = "Âm lịch: Ngày ${item.day} Tháng ${item.month} - Trực: ${item.truc} - Tiết: ${item.tietKhi}"
+            val monthText = if (item.isLeap) "Tháng ${item.month} (Nhuận)" else "Tháng ${item.month}"
+            text2.text = "Âm lịch: Ngày ${item.day} $monthText - Trực: ${item.truc} - Tiết: ${item.tietKhi}"
             text2.setTextColor(android.graphics.Color.parseColor("#555555"))
 
             itemView.setOnClickListener { onDayClick(item) }

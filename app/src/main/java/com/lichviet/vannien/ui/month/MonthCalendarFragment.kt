@@ -175,11 +175,12 @@ class MonthCalendarFragment : Fragment() {
             model.solarMonth,
             model.solarYear
         )
+        val monthDisplay = if (full.isLeap) "Tháng ${model.lunarMonth} (Nhuận)" else "Tháng ${model.lunarMonth}"
         binding.tvSummaryLunarDate.text = String.format(
             Locale.getDefault(),
-            "Âm lịch: Ngày %d Tháng %d Năm %s",
+            "Âm lịch: Ngày %d %s Năm %s",
             model.lunarDay,
-            model.lunarMonth,
+            monthDisplay,
             full.canChiYear
         )
     }

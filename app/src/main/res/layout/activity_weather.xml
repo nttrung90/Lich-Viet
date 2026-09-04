@@ -81,7 +81,7 @@
         android:layout_height="0dp"
         android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/weather_top_bar"
-        app:layout_constraintBottom_toTopOf="@id/bottom_banner_weather"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -278,33 +278,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Bottom Blue Banner (Thời Tiết Chính Xác) -->
-    <LinearLayout
-        android:id="@+id/bottom_banner_weather"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:background="#0E4DA4"
-        android:orientation="vertical"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Top Yellow Stripe -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:background="#FFD700" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Thời Tiết Chính Xác"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.03" />
-
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

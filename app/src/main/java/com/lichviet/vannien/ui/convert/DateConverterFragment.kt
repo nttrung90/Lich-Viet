@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.NumberPicker
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lichviet.vannien.R
@@ -79,8 +81,9 @@ class DateConverterFragment : Fragment() {
         binding.pickerLunarYear.maxValue = 2100
 
         // Lắng nghe thay đổi Picker Dương Lịch -> Cập nhật Picker Âm Lịch
-        val solarListener = { _: Any, _: Int, _: Int ->
+        val solarListener = NumberPicker.OnValueChangeListener { _, _, _ ->
             if (!isUpdatingPickers) {
+                adjustSolarDaysRange()
                 val sDay = binding.pickerSolarDay.value
                 val sMonth = binding.pickerSolarMonth.value
                 val sYear = binding.pickerSolarYear.value
@@ -92,7 +95,7 @@ class DateConverterFragment : Fragment() {
         binding.pickerSolarYear.setOnValueChangedListener(solarListener)
 
         // Lắng nghe thay đổi Picker Âm Lịch -> Cập nhật Picker Dương Lịch
-        val lunarListener = { _: Any, _: Int, _: Int ->
+        val lunarListener = NumberPicker.OnValueChangeListener { _, _, _ ->
             if (!isUpdatingPickers) {
                 val lDay = binding.pickerLunarDay.value
                 val lMonth = binding.pickerLunarMonth.value
@@ -105,14 +108,32 @@ class DateConverterFragment : Fragment() {
         binding.pickerLunarYear.setOnValueChangedListener(lunarListener)
     }
 
+    private fun adjustSolarDaysRange() {
+        val month = binding.pickerSolarMonth.value
+        val year = binding.pickerSolarYear.value
+        val cal = Calendar.getInstance().apply {
+            set(Calendar.YEAR, year)
+            set(Calendar.MONTH, month - 1)
+            set(Calendar.DAY_OF_MONTH, 1)
+        }
+        val maxDays = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
+        if (binding.pickerSolarDay.maxValue != maxDays) {
+            binding.pickerSolarDay.maxValue = maxDays
+            if (binding.pickerSolarDay.value > maxDays) {
+                binding.pickerSolarDay.value = maxDays
+            }
+        }
+    }
+
     private fun setSolarPickers(day: Int, month: Int, year: Int) {
         isUpdatingPickers = true
-        binding.pickerSolarDay.value = day
         binding.pickerSolarMonth.value = month
         binding.pickerSolarYear.value = year
+        adjustSolarDaysRange()
+        binding.pickerSolarDay.value = day.coerceAtMost(binding.pickerSolarDay.maxValue)
         isUpdatingPickers = false
 
-        updateLunarFromSolar(day, month, year)
+        updateLunarFromSolar(binding.pickerSolarDay.value, month, year)
     }
 
     private fun updateLunarFromSolar(sDay: Int, sMonth: Int, sYear: Int) {
@@ -127,9 +148,10 @@ class DateConverterFragment : Fragment() {
     private fun updateSolarFromLunar(lDay: Int, lMonth: Int, lYear: Int) {
         isUpdatingPickers = true
         val (sDay, sMonth, sYear) = LunarCalendarEngine.convertLunar2Solar(lDay, lMonth, lYear)
-        binding.pickerSolarDay.value = sDay
         binding.pickerSolarMonth.value = sMonth
         binding.pickerSolarYear.value = sYear
+        adjustSolarDaysRange()
+        binding.pickerSolarDay.value = sDay.coerceAtMost(binding.pickerSolarDay.maxValue)
         isUpdatingPickers = false
     }
 
@@ -155,6 +177,12 @@ class DateConverterFragment : Fragment() {
         )
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, purposes)
         binding.spinnerPurpose.adapter = adapter
+        binding.spinnerPurpose.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                loadGoodDays()
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
 
         goodDayAdapter = GoodDayAdapter { lunarDate ->
             val intent = Intent(requireContext(), DayDetailActivity::class.java).apply {
@@ -171,6 +199,7 @@ class DateConverterFragment : Fragment() {
     private fun loadGoodDays() {
         val month = binding.pickerSolarMonth.value
         val year = binding.pickerSolarYear.value
+        val purposePos = binding.spinnerPurpose.selectedItemPosition
 
         val goodDays = mutableListOf<LunarCalendarEngine.LunarDate>()
         val cal = Calendar.getInstance().apply {
@@ -183,7 +212,35 @@ class DateConverterFragment : Fragment() {
         for (d in 1..daysInMonth) {
             val date = LunarCalendarEngine.getFullLunarDate(d, month, year)
             if (date.isHoangDao) {
-                goodDays.add(date)
+                val matchesPurpose = when (purposePos) {
+                    0 -> { // Cưới hỏi: Trực Định, Thành, Khai; tránh Nguyệt Kỵ, Tam Nương
+                        date.truc in listOf("Định", "Thành", "Khai", "Mãn") &&
+                                date.badStars.none { it.startsWith("Nguyệt Kỵ") || it.startsWith("Tam Nương") }
+                    }
+                    1 -> { // Khai trương: Trực Kiến, Khai, Thành, Mãn; tránh Nguyệt Kỵ
+                        date.truc in listOf("Kiến", "Khai", "Thành", "Mãn") &&
+                                date.badStars.none { it.startsWith("Nguyệt Kỵ") }
+                    }
+                    2 -> { // Động thổ: Trực Kiến, Khai, Định; tránh Tam Nương
+                        date.truc in listOf("Kiến", "Khai", "Định") &&
+                                date.badStars.none { it.startsWith("Tam Nương") }
+                    }
+                    3 -> { // Xuất hành: Trực Khai, Thành, Kiến, Trừ; tránh Nguyệt Kỵ
+                        date.truc in listOf("Khai", "Thành", "Kiến", "Trừ") &&
+                                date.badStars.none { it.startsWith("Nguyệt Kỵ") }
+                    }
+                    4 -> { // Ký kết hợp đồng: Trực Thành, Định, Khai
+                        date.truc in listOf("Thành", "Định", "Khai")
+                    }
+                    5 -> { // Vào nhà mới: Trực Thành, Định, Khai, Mãn; tránh Tam Nương
+                        date.truc in listOf("Thành", "Định", "Khai", "Mãn") &&
+                                date.badStars.none { it.startsWith("Tam Nương") }
+                    }
+                    else -> true
+                }
+                if (matchesPurpose) {
+                    goodDays.add(date)
+                }
             }
         }
         goodDayAdapter.submitList(goodDays)

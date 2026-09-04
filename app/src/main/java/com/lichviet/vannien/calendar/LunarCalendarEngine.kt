@@ -59,6 +59,13 @@ object LunarCalendarEngine {
         val shouldAvoid: List<String>
     )
 
+    data class LunarDayResult(
+        val day: Int,
+        val month: Int,
+        val year: Int,
+        val isLeap: Boolean = false
+    )
+
     data class HoangDaoHour(
         val name: String,
         val chi: String,
@@ -84,12 +91,11 @@ object LunarCalendarEngine {
      * Chuyển số ngày Julian sang ngày dương lịch
      */
     fun jdToDate(jd: Int): Triple<Int, Int, Int> {
-        val a: Long
-        if (jd > 2299160) {
+        val a: Long = if (jd > 2299160) {
             val aAlpha = (((jd - 1867216.25) / 36524.25).toLong())
-            a = jd + 1 + aAlpha - aAlpha / 4
+            jd + 1 + aAlpha - aAlpha / 4
         } else {
-            a = jd.toLong()
+            jd.toLong()
         }
         val b = a + 1524
         val c = ((b - 122.1) / 365.25).toLong()
@@ -102,43 +108,44 @@ object LunarCalendarEngine {
     }
 
     /**
-     * Tính thời điểm điểm Sóc (New Moon) theo thuật toán thiên văn
+     * Tính thời điểm điểm Sóc (New Moon) theo thuật toán thiên văn của TS. Hồ Ngọc Đức
      */
-    private fun getNewMoonDay(k: Int, timeZone: Double): Int {
+    fun getNewMoonDay(k: Int, timeZone: Double = TIMEZONE): Int {
         val t = k / 1236.85
         val t2 = t * t
         val t3 = t2 * t
         val dr = PI / 180.0
-        var jde = 2451524.613488 + 29.530588853 * k + 0.0001337 * t2 - 0.000000150 * t3
-        val m = 2.5534 + 29.10535669 * k - 0.0000218 * t2 - 0.00000011 * t3
-        val mprime = 201.5643 + 385.81693528 * k + 0.0107438 * t2 + 0.00001239 * t3
-        val f = 160.7108 + 390.67050274 * k - 0.0016341 * t2 - 0.00000227 * t3
-        val omega = 124.7746 - 1.56375580 * k + 0.0020691 * t2 + 0.00000215 * t3
 
-        // Hiệu chỉnh các nhiễu loạn Mặt Trăng & Mặt Trời
-        var delta = (0.1734 - 0.000393 * t) * sin(m * dr)
-        delta += 0.0021 * sin(2 * m * dr)
-        delta -= 0.4068 * sin(mprime * dr)
-        delta += 0.0161 * sin(2 * mprime * dr)
-        delta -= 0.0004 * sin(3 * mprime * dr)
-        delta += 0.0104 * sin(2 * f * dr)
-        delta -= 0.0051 * sin((m + mprime) * dr)
-        delta -= 0.0074 * sin((m - mprime) * dr)
-        delta += 0.0004 * sin((2 * f + m) * dr)
-        delta -= 0.0004 * sin((2 * f - m) * dr)
-        delta -= 0.0006 * sin((2 * f + mprime) * dr)
-        delta += 0.0010 * sin((2 * f - mprime) * dr)
-        delta += 0.0005 * sin((m + 2 * mprime) * dr)
-        jde += delta
+        var jd1 = 2415020.75933 + 29.53058868 * k + 0.0001178 * t2 - 0.000000155 * t3
+        jd1 += 0.00033 * sin((166.56 + 132.87 * t - 0.009173 * t2) * dr)
 
-        return floor(jde + 0.5 + timeZone / 24.0).toInt()
+        val m = (359.2242 + 29.10535608 * k - 0.0000333 * t2 - 0.00000347 * t3) * dr
+        val mprime = (306.0253 + 385.81691806 * k + 0.0107306 * t2 + 0.00001236 * t3) * dr
+        val f = (21.2964 + 390.67050646 * k - 0.0016528 * t2 - 0.00000239 * t3) * dr
+
+        var c1 = (0.1734 - 0.000393 * t) * sin(m) + 0.0021 * sin(2 * m)
+        c1 -= 0.4068 * sin(mprime) - 0.0161 * sin(2 * mprime)
+        c1 -= 0.0004 * sin(3 * mprime)
+        c1 += 0.0104 * sin(2 * f) - 0.0051 * sin(m + mprime)
+        c1 -= 0.0074 * sin(m - mprime) + 0.0004 * sin(2 * f + m)
+        c1 -= 0.0004 * sin(2 * f - m) - 0.0006 * sin(2 * f + mprime)
+        c1 += 0.0010 * sin(2 * f - mprime) + 0.0005 * sin(2 * mprime + m)
+
+        val del = if (t < -11.0) {
+            0.001 + 0.000839 * t + 0.0002261 * t2 - 0.00000845 * t3 - 0.000000081 * t * t3
+        } else {
+            -0.000278 + 0.000265 * t + 0.000262 * t2
+        }
+
+        val jdNew = jd1 + c1 - del
+        return floor(jdNew + 0.5 + timeZone / 24.0).toInt()
     }
 
     /**
-     * Tính kinh độ Mặt Trời tại ngày JDN (để tính tiết khí)
+     * Tính kinh độ Mặt Trời (tính bằng radian từ 0 đến 2*PI)
      */
-    private fun getSunLongitude(jdn: Int, timeZone: Double): Double {
-        val t = (jdn - 0.5 - timeZone / 24.0 - 2451545.0) / 36525.0
+    private fun sunLongitudeRadian(jdn: Double): Double {
+        val t = (jdn - 2451545.0) / 36525.0
         val t2 = t * t
         val dr = PI / 180.0
         val l0 = 280.46645 + 36000.76983 * t + 0.0003032 * t2
@@ -146,61 +153,148 @@ object LunarCalendarEngine {
         val c = (1.914600 - 0.004817 * t - 0.000014 * t2) * sin(m * dr) +
                 (0.019993 - 0.000101 * t) * sin(2 * m * dr) +
                 0.000290 * sin(3 * m * dr)
-        var theta = (l0 + c) % 360.0
-        if (theta < 0) theta += 360.0
-        return theta
+        var l = (l0 + c) * dr
+        l -= 2 * PI * floor(l / (2 * PI))
+        return l
     }
 
     /**
-     * Chuyển đổi Dương Lịch sang Âm Lịch Việt Nam
+     * Tính kinh độ Mặt Trời (tính bằng cung 30 độ: 0..11) để xác định Trung Khí
      */
-    fun convertSolar2Lunar(dd: Int, mm: Int, yy: Int): Triple<Int, Int, Int> {
+    fun getSunLongitudeMajor(dayNumber: Int, timeZone: Double = TIMEZONE): Int {
+        val rad = sunLongitudeRadian(dayNumber - 0.5 - timeZone / 24.0)
+        return floor(rad / PI * 6.0).toInt()
+    }
+
+    /**
+     * Tính kinh độ Mặt Trời tại ngày JDN (0.0..360.0 độ) để tính tiết khí
+     */
+    fun getSunLongitude(jdn: Int, timeZone: Double = TIMEZONE): Double {
+        val rad = sunLongitudeRadian(jdn - 0.5 - timeZone / 24.0)
+        var deg = rad * 180.0 / PI
+        deg %= 360.0
+        if (deg < 0) deg += 360.0
+        return deg
+    }
+
+    /**
+     * Tìm ngày Sóc của tháng 11 âm lịch (tháng chứa điểm Đông Chí) theo TS. Hồ Ngọc Đức
+     */
+    fun getLunarMonth11(yy: Int, timeZone: Double = TIMEZONE): Int {
+        val jdDec31 = jdFromDate(31, 12, yy)
+        val k = floor((jdDec31 - 2415021.0769986) / 29.530588853).toInt()
+        var nm = getNewMoonDay(k, timeZone)
+        val sunLong = getSunLongitudeMajor(nm, timeZone)
+        if (sunLong >= 9) {
+            nm = getNewMoonDay(k - 1, timeZone)
+        }
+        return nm
+    }
+
+    /**
+     * Tìm vị trí tháng nhuận (tính từ tháng 11 âm lịch năm trước)
+     */
+    fun getLeapMonthOffset(a11: Int, timeZone: Double = TIMEZONE): Int {
+        val k = floor((a11 - 2415021.0769986) / 29.530588853 + 0.5).toInt()
+        var last = 0
+        var i = 1 // Bắt đầu từ tháng sau tháng 11 âm lịch
+        var arc = getSunLongitudeMajor(getNewMoonDay(k + i, timeZone), timeZone)
+        do {
+            last = arc
+            i++
+            arc = getSunLongitudeMajor(getNewMoonDay(k + i, timeZone), timeZone)
+        } while (arc != last && i < 14)
+        return i - 1
+    }
+
+    /**
+     * Chuyển đổi Dương Lịch sang Âm Lịch Việt Nam (chuẩn thuật toán TS. Hồ Ngọc Đức)
+     */
+    fun convertSolar2Lunar(dd: Int, mm: Int, yy: Int, timeZone: Double = TIMEZONE): LunarDayResult {
         val dayNumber = jdFromDate(dd, mm, yy)
         val k = floor((dayNumber - 2415021.0769986) / 29.530588853).toInt()
-        var monthStart = getNewMoonDay(k + 1, TIMEZONE)
-        val currentK = if (monthStart > dayNumber) k else k + 1
-        monthStart = getNewMoonDay(currentK, TIMEZONE)
-
-        // Tính ngày trong tháng âm lịch
-        val lunarDay = dayNumber - monthStart + 1
-
-        // Tìm tháng 11 âm lịch (Đông Chí) của năm
-        val a11 = getNewMoonDay(floor((jdFromDate(31, 12, yy) - 2415021.0769986) / 29.530588853).toInt(), TIMEZONE)
-        val b11 = if (a11 >= dayNumber + 30) {
-            getNewMoonDay(floor((jdFromDate(31, 12, yy - 1) - 2415021.0769986) / 29.530588853).toInt(), TIMEZONE)
-        } else {
-            a11
+        var monthStart = getNewMoonDay(k + 1, timeZone)
+        if (monthStart > dayNumber) {
+            monthStart = getNewMoonDay(k, timeZone)
         }
 
-        val lMonth = ((currentK - floor((b11 - 2415021.0769986) / 29.530588853).toInt()) % 12 + 12) % 12
-        var lunarMonth = (lMonth + 11) % 12
-        if (lunarMonth == 0) lunarMonth = 12
-
+        var a11 = getLunarMonth11(yy, timeZone)
+        var b11 = a11
         var lunarYear = yy
-        if (lunarMonth >= 11 && mm < 3) {
-            lunarYear = yy - 1
-        } else if (lunarMonth <= 2 && mm >= 11) {
+        if (a11 >= monthStart) {
+            lunarYear = yy
+            a11 = getLunarMonth11(yy - 1, timeZone)
+        } else {
             lunarYear = yy + 1
+            b11 = getLunarMonth11(yy + 1, timeZone)
         }
 
-        return Triple(lunarDay, lunarMonth, lunarYear)
+        val lunarDay = dayNumber - monthStart + 1
+        val diff = floor((monthStart - a11) / 29.0).toInt()
+        var isLeap = false
+        var lunarMonth = diff + 11
+
+        if (b11 - a11 > 365) {
+            val leapMonthDiff = getLeapMonthOffset(a11, timeZone)
+            if (diff >= leapMonthDiff) {
+                lunarMonth = diff + 10
+                if (diff == leapMonthDiff) {
+                    isLeap = true
+                }
+            }
+        }
+
+        if (lunarMonth > 12) {
+            lunarMonth -= 12
+        }
+        if (lunarMonth >= 11 && diff < 4) {
+            lunarYear -= 1
+        }
+
+        return LunarDayResult(lunarDay, lunarMonth, lunarYear, isLeap)
     }
 
     /**
-     * Chuyển đổi Âm Lịch sang Dương Lịch
+     * Chuyển đổi Âm Lịch sang Dương Lịch (hỗ trợ cả tháng nhuận chuẩn xác)
      */
-    fun convertLunar2Solar(lunarDay: Int, lunarMonth: Int, lunarYear: Int): Triple<Int, Int, Int> {
-        // Tìm ngày sóc của tháng 11 âm lịch năm trước
-        val jdDec31 = jdFromDate(31, 12, lunarYear - 1)
-        val kDec = floor((jdDec31 - 2415021.0769986) / 29.530588853).toInt()
-        val nm11 = getNewMoonDay(kDec, TIMEZONE)
+    fun convertLunar2Solar(
+        lunarDay: Int,
+        lunarMonth: Int,
+        lunarYear: Int,
+        isLeap: Boolean = false,
+        timeZone: Double = TIMEZONE
+    ): Triple<Int, Int, Int> {
+        val a11: Int
+        val b11: Int
+        if (lunarMonth < 11) {
+            a11 = getLunarMonth11(lunarYear - 1, timeZone)
+            b11 = getLunarMonth11(lunarYear, timeZone)
+        } else {
+            a11 = getLunarMonth11(lunarYear, timeZone)
+            b11 = getLunarMonth11(lunarYear + 1, timeZone)
+        }
 
-        // Tính khoảng cách tháng
-        val monthOffset = if (lunarMonth >= 11) lunarMonth - 11 else lunarMonth + 1
-        val targetK = kDec + monthOffset
-        val targetMonthStart = getNewMoonDay(targetK, TIMEZONE)
+        val k = floor((a11 - 2415021.0769986) / 29.530588853 + 0.5).toInt()
+        var off = lunarMonth - 11
+        if (off < 0) {
+            off += 12
+        }
+
+        if (b11 - a11 > 365) {
+            val leapOff = getLeapMonthOffset(a11, timeZone)
+            var leapMonth = leapOff - 2
+            if (leapMonth < 0) {
+                leapMonth += 12
+            }
+            if (isLeap && lunarMonth != leapMonth) {
+                return Triple(0, 0, 0) // Tháng nhuận không hợp lệ
+            } else if (isLeap || off >= leapOff) {
+                off += 1
+            }
+        }
+
+        val targetMonthStart = getNewMoonDay(k + off, timeZone)
         val targetJd = targetMonthStart + lunarDay - 1
-
         return jdToDate(targetJd)
     }
 
@@ -208,17 +302,22 @@ object LunarCalendarEngine {
      * Tính đầy đủ thông tin Âm Lịch và Phong Thủy cho một ngày Dương Lịch
      */
     fun getFullLunarDate(dd: Int, mm: Int, yy: Int): LunarDate {
-        val (lunarDay, lunarMonth, lunarYear) = convertSolar2Lunar(dd, mm, yy)
+        val lunarRes = convertSolar2Lunar(dd, mm, yy)
+        val lunarDay = lunarRes.day
+        val lunarMonth = lunarRes.month
+        val lunarYear = lunarRes.year
+        val isLeap = lunarRes.isLeap
         val jd = jdFromDate(dd, mm, yy)
 
-        // Can Chi Năm
-        val canYear = CAN[(lunarYear + 6) % 10]
+        // Can Chi Năm (theo Can Chi năm âm lịch)
+        val canYearIndex = (lunarYear + 6) % 10
+        val canYear = CAN[canYearIndex]
         val chiYear = CHI[(lunarYear + 8) % 12]
         val canChiYear = "$canYear $chiYear"
 
-        // Can Chi Tháng
-        val canMonthBase = ((lunarYear * 12 + lunarMonth + 3) % 10)
-        val canMonth = CAN[canMonthBase]
+        // Can Chi Tháng (quy tắc Ngũ Hổ Độn)
+        val canMonthIndex = ((canYearIndex % 5) * 2 + 2 + (lunarMonth - 1)) % 10
+        val canMonth = CAN[canMonthIndex]
         val chiMonth = CHI[(lunarMonth + 1) % 12]
         val canChiMonth = "$canMonth $chiMonth"
 
@@ -232,7 +331,7 @@ object LunarCalendarEngine {
         val daysOfWeek = arrayOf("Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy")
         val dayOfWeek = daysOfWeek[dayOfWeekIndex]
 
-        // Tiết khí
+        // Tiết khí (từ 0 đến 23)
         val sunLong = getSunLongitude(jd, TIMEZONE)
         val tietKhiIndex = floor(sunLong / 15.0).toInt() % 24
         val tietKhi = TIET_KHI[tietKhiIndex]
@@ -267,7 +366,7 @@ object LunarCalendarEngine {
             day = lunarDay,
             month = lunarMonth,
             year = lunarYear,
-            isLeap = false,
+            isLeap = isLeap,
             canChiDay = canChiDay,
             canChiMonth = canChiMonth,
             canChiYear = canChiYear,

@@ -12,10 +12,13 @@ import androidx.fragment.app.Fragment
 import com.lichviet.vannien.R
 import com.lichviet.vannien.calendar.LunarCalendarEngine
 import com.lichviet.vannien.data.FolkQuoteRepository
+import com.lichviet.vannien.data.WeatherRepository
 import com.lichviet.vannien.databinding.FragmentDayCalendarBinding
 import com.lichviet.vannien.ui.detail.DayDetailActivity
 import com.lichviet.vannien.ui.horoscope.HoroscopeDetailActivity
 import com.lichviet.vannien.ui.weather.WeatherActivity
+import android.os.Handler
+import android.os.Looper
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -44,7 +47,42 @@ class DayCalendarFragment : Fragment() {
         setupListeners()
         setupSwipeGesture()
         updateCalendarDisplay()
+        updateWeatherDisplay()
     }
+
+    data class DayBackground(
+        val resId: Int,
+        val title: String,
+        val origin: String
+    )
+
+    private val dayBackgrounds = arrayOf(
+        DayBackground(R.drawable.bg_folk_dam_cuoi_chuot, "Đám cưới chuột", "Tranh Dân Gian Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_chan_trau, "Chăn trâu thổi sáo", "Tranh Dân Gian Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_ly_ngu, "Lý ngư vọng nguyệt", "Tranh Dân Gian Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_dai_cat, "Gà Đại Cát", "Tranh Dân Gian Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_lon_am_duong, "Lợn đàn âm dương", "Tranh Dân Gian Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_hung_dua, "Hứng dừa", "Tranh Dân Gian Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_vinh_hoa, "Bé ôm gà (Vinh Hoa)", "Tranh Tết Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_phu_quy, "Bé ôm vịt (Phú Quý)", "Tranh Tết Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_tha_dieu, "Mục đồng thả diều", "Tranh Dân Gian Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_dau_vat, "Đấu vật đầu xuân", "Tranh Dân Gian Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_hoc_bai, "Mục đồng học bài", "Tranh Dân Gian Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_doc_sach, "Mục đồng đọc sách", "Tranh Dân Gian Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_chuot_ruoc_den, "Chuột rước đèn", "Tranh Dân Gian Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_ca_chep, "Cá chép hoa sen", "Tranh Dân Gian Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_ba_trieu, "Bà Triệu cưỡi voi", "Tranh Lịch Sử Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_hai_ba_trung, "Hai Bà Trưng ra trận", "Tranh Lịch Sử Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_ngo_quyen, "Ngô Quyền Bạch Đằng Giang", "Tranh Lịch Sử Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_ech_di_hoc, "Thầy đồ Cóc (Ếch đi học)", "Tranh Dân Gian Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_nhan_nghia, "Gà trống Nhân Nghĩa", "Tranh Dân Gian Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_san_ga, "Sân gà đầm ấm", "Tranh Dân Gian Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_ong_tao, "Ông Táo về trời", "Tranh Dân Gian Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_choi_chim, "Chơi chim tao nhã", "Tranh Dân Gian Đông Hồ"),
+        DayBackground(R.drawable.bg_folk_danh_ghen, "Đánh ghen dân gian", "Tranh Dân Gian Đông Hồ")
+    )
+
+    private var customWallpaperOffset = 0
 
     private fun setupListeners() {
         // Nút thời tiết -> Mở màn hình Thời Tiết (Ảnh 5)
@@ -67,12 +105,21 @@ class DayCalendarFragment : Fragment() {
         }
         binding.btnEvent.setOnClickListener(openDetailAction)
         binding.panelLunarInfo.setOnClickListener(openDetailAction)
-        binding.cardCalendarPage.setOnClickListener(openDetailAction)
+        binding.tvSolarDay.setOnClickListener(openDetailAction)
 
         // Nút "Hôm Nay" -> Trở về ngày hiện tại
         binding.btnToday.setOnClickListener {
             currentCalendar.timeInMillis = System.currentTimeMillis()
             updateCalendarDisplay()
+        }
+
+        // Nút "Đổi Tranh" -> Chuyển sang bức tranh dân gian tiếp theo
+        binding.btnChangeWallpaper.setOnClickListener {
+            customWallpaperOffset++
+            val dayOfYear = currentCalendar.get(Calendar.DAY_OF_YEAR)
+            val bg = dayBackgrounds[abs(dayOfYear + customWallpaperOffset) % dayBackgrounds.size]
+            binding.ivDayBackground.setImageResource(bg.resId)
+            android.widget.Toast.makeText(requireContext(), "${bg.title} • ${bg.origin}", android.widget.Toast.LENGTH_SHORT).show()
         }
 
         // Chọn tháng - năm
@@ -122,10 +169,10 @@ class DayCalendarFragment : Fragment() {
                     abs(velocityX) > SWIPE_VELOCITY_THRESHOLD
                 ) {
                     if (diffX > 0) {
-                        // Vuốt sang phải -> Ngày trước
+                        // Vuốt sang bên phải -> Trở về ngày trước (-1)
                         currentCalendar.add(Calendar.DAY_OF_MONTH, -1)
                     } else {
-                        // Vuốt sang trái -> Ngày tiếp theo
+                        // Vuốt sang bên trái -> Đến ngày kế tiếp (+1)
                         currentCalendar.add(Calendar.DAY_OF_MONTH, 1)
                     }
                     updateCalendarDisplay()
@@ -135,20 +182,67 @@ class DayCalendarFragment : Fragment() {
             }
         })
 
-        binding.layoutSwipeContainer.setOnTouchListener { _, event ->
-            gestureDetector.onTouchEvent(event)
-            true
+        binding.layoutSwipeContainer.setOnTouchListener { v, event ->
+            val handled = gestureDetector.onTouchEvent(event)
+            if (!handled && event.action == MotionEvent.ACTION_UP) {
+                v.performClick()
+            }
+            handled
         }
+    }
+
+    private val clockHandler = Handler(Looper.getMainLooper())
+    private val clockRunnable = object : Runnable {
+        override fun run() {
+            updateRealTimeClock()
+            clockHandler.postDelayed(this, 10000) // Tự động cập nhật mỗi 10 giây
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        clockHandler.post(clockRunnable)
+        updateWeatherDisplay()
+    }
+
+    private fun updateWeatherDisplay() {
+        if (_binding == null) return
+        val weather = WeatherRepository.getCurrentWeather()
+        binding.tvWeatherTemp.text = "${weather.tempCurrent}°C"
+        binding.tvWeatherCity.text = weather.city
+    }
+
+    override fun onPause() {
+        super.onPause()
+        clockHandler.removeCallbacks(clockRunnable)
+    }
+
+    private fun updateRealTimeClock() {
+        if (_binding == null) return
+        val now = Calendar.getInstance()
+        binding.tvClockTime.text = timeFormat.format(now.time)
+        val day = currentCalendar.get(Calendar.DAY_OF_MONTH)
+        val month = currentCalendar.get(Calendar.MONTH) + 1
+        val year = currentCalendar.get(Calendar.YEAR)
+        val lunarDate = LunarCalendarEngine.getFullLunarDate(day, month, year)
+        val canChiHour = LunarCalendarEngine.getCanChiHour(
+            now.get(Calendar.HOUR_OF_DAY),
+            lunarDate.canChiDay.split(" ").firstOrNull() ?: "Giáp"
+        )
+        binding.tvCanChiHour.text = canChiHour
     }
 
     fun updateCalendarDisplay() {
         val day = currentCalendar.get(Calendar.DAY_OF_MONTH)
         val month = currentCalendar.get(Calendar.MONTH) + 1
         val year = currentCalendar.get(Calendar.YEAR)
-        val hour = currentCalendar.get(Calendar.HOUR_OF_DAY)
-
         // Tính toán thông tin Âm Lịch thiên văn
         val lunarDate = LunarCalendarEngine.getFullLunarDate(day, month, year)
+
+        // Đổi hình nền theo ngày
+        val dayOfYear = currentCalendar.get(Calendar.DAY_OF_YEAR)
+        val bgItem = dayBackgrounds[abs(dayOfYear + customWallpaperOffset) % dayBackgrounds.size]
+        binding.ivDayBackground.setImageResource(bgItem.resId)
 
         // Top bar Tháng - Năm
         binding.tvMonthYear.text = String.format(Locale.getDefault(), "Tháng %02d - %d", month, year)
@@ -165,9 +259,7 @@ class DayCalendarFragment : Fragment() {
         binding.tvQuoteAuthor.text = quote.author
 
         // Giờ hiện tại và Can Chi của giờ
-        binding.tvClockTime.text = timeFormat.format(currentCalendar.time)
-        val canChiHour = LunarCalendarEngine.getCanChiHour(hour, lunarDate.canChiDay.split(" ").firstOrNull() ?: "Giáp")
-        binding.tvCanChiHour.text = canChiHour
+        updateRealTimeClock()
 
         // Ngày và tháng âm lịch
         binding.tvLunarDay.text = lunarDate.day.toString()
@@ -181,6 +273,7 @@ class DayCalendarFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        clockHandler.removeCallbacks(clockRunnable)
         _binding = null
     }
 }

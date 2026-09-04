@@ -71,7 +71,7 @@ class DayDetailActivity : AppCompatActivity() {
         binding.tvDetailLunarDay.text = lunarDate.day.toString()
         binding.tvDetailCanchiDay.text = lunarDate.canChiDay
 
-        binding.tvDetailLunarMonth.text = lunarDate.month.toString()
+        binding.tvDetailLunarMonth.text = if (lunarDate.isLeap) "${lunarDate.month} (Nhuận)" else lunarDate.month.toString()
         binding.tvDetailCanchiMonth.text = lunarDate.canChiMonth
 
         binding.tvDetailLunarYear.text = lunarDate.year.toString()

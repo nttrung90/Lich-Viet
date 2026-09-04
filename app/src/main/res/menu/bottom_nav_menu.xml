@@ -17,7 +17,7 @@
 
     <item
         android:id="@+id/navigation_horoscope"
-        android:icon="@drawable/ic_yin_yang"
+        android:icon="@drawable/ic_bat_quai"
         android:title="@string/nav_horoscope" />
 
     <item

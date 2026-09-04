@@ -15,5 +15,7 @@
 local.properties
 .idea/
 app/build/
+app/release/
+release/
 *.apk
 *.aab

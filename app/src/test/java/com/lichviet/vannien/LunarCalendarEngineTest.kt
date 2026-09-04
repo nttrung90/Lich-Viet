@@ -56,8 +56,45 @@ class LunarCalendarEngineTest {
         assertNotNull(starMale.name)
         assertNotNull(starFemale.name)
 
-        val batTrach = HoroscopeEngine.getBatTrach(1990, true)
-        assertEquals(4, batTrach.huongTot.size)
-        assertEquals(4, batTrach.huongXau.size)
+        // Nam 1990: Quái số 1 (Khảm)
+        val batTrach1990Male = HoroscopeEngine.getBatTrach(1990, true)
+        assertEquals(1, batTrach1990Male.quaiSo)
+        assertEquals("Khảm (Thủy)", batTrach1990Male.cungMenh)
+        assertEquals(4, batTrach1990Male.huongTot.size)
+        assertEquals(4, batTrach1990Male.huongXau.size)
+
+        // Nữ 1990: Quái số gốc là 5 -> Ngũ vi trung cung -> Quy về Cấn (Thổ, quái số 8)
+        val batTrach1990Female = HoroscopeEngine.getBatTrach(1990, false)
+        assertEquals(8, batTrach1990Female.quaiSo)
+        assertEquals("Cấn (Thổ)", batTrach1990Female.cungMenh)
+
+        // Nam 1995: 1+9+9+5 = 24 -> 6 -> 11 - 6 = 5 -> Nam quy về Khôn (Thổ, quái số 2)
+        val batTrach1995Male = HoroscopeEngine.getBatTrach(1995, true)
+        assertEquals(2, batTrach1995Male.quaiSo)
+        assertEquals("Khôn (Thổ)", batTrach1995Male.cungMenh)
+    }
+
+    @Test
+    fun testTetNguyenDanAndLeapMonth() {
+        // Tết Giáp Thìn 2024: 10/02/2024 Dương lịch = Mùng 1 Tết Âm lịch
+        val tet2024 = LunarCalendarEngine.getFullLunarDate(10, 2, 2024)
+        assertEquals(1, tet2024.day)
+        assertEquals(1, tet2024.month)
+        assertEquals(2024, tet2024.year)
+        assertEquals("Giáp Thìn", tet2024.canChiYear)
+        assertEquals(false, tet2024.isLeap)
+
+        // Tháng Nhuận năm Quý Mão 2023:
+        // Ngày 22/03/2023 Dương lịch là ngày Mùng 1 Tháng 2 Nhuận Âm lịch
+        val leapDate2023 = LunarCalendarEngine.getFullLunarDate(22, 3, 2023)
+        assertEquals(1, leapDate2023.day)
+        assertEquals(2, leapDate2023.month)
+        assertEquals(true, leapDate2023.isLeap)
+
+        // Chuyển ngược lại từ Âm sang Dương cho tháng nhuận
+        val (sDay, sMonth, sYear) = LunarCalendarEngine.convertLunar2Solar(1, 2, 2023, isLeap = true)
+        assertEquals(22, sDay)
+        assertEquals(3, sMonth)
+        assertEquals(2023, sYear)
     }
 }

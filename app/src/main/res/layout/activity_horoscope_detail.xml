@@ -73,6 +73,7 @@
                     android:padding="16dp">
 
                     <TextView
+                        android:id="@+id/tv_input_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Thông tin tra cứu:"
@@ -81,6 +82,7 @@
                         android:textStyle="bold" />
 
                     <LinearLayout
+                        android:id="@+id/layout_birth_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"

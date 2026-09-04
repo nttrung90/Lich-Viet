@@ -15,6 +15,7 @@
   - **Cột phải**: Can Chi của Ngày (Ng.), Can Chi của Tháng (Th.), và Can Chi của Năm.
 - Cử chỉ chạm vuốt (Swipe Gesture) sang trái/phải để chuyển ngày mượt mà.
 - Nút bấm **"Hôm nay"** hình huy hiệu lịch giúp quay về ngày hiện tại tức thì.
+- Nút bấm **"Đổi tranh"** đổi qua lại giữa bộ sưu tập **23 bức tranh dân gian Việt Nam** bất hủ trên nền giấy điệp/giấy dó truyền thống (Đám cưới chuột, Chăn trâu thổi sáo, Lý ngư vọng nguyệt, Gà Đại Cát, Lợn đàn âm dương, Hứng dừa, Bé ôm gà Vinh Hoa, Bé ôm vịt Phú Quý, Mục đồng thả diều, Đấu vật dân gian, Thầy đồ Cóc, Ngô Quyền Bạch Đằng Giang, Bà Triệu cưỡi voi, Hai Bà Trưng ra trận, Ông Táo về trời...). 100% tranh nghệ thuật dân gian, không sử dụng ảnh chụp.
 - Biểu tượng thời tiết nhanh trên thanh công cụ góc trái dẫn trực tiếp tới màn hình thời tiết.
 - Nút vương miện hoàng gia mở nhanh tính năng Tử Vi.
 

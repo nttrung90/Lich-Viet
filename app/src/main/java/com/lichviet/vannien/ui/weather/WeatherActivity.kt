@@ -16,7 +16,7 @@ import com.lichviet.vannien.databinding.ActivityWeatherBinding
 class WeatherActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWeatherBinding
-    private var currentCity = "Hà Nội"
+    private var currentCity = WeatherRepository.currentSelectedCity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,14 +43,15 @@ class WeatherActivity : AppCompatActivity() {
 
     private fun loadWeatherData(cityName: String) {
         currentCity = cityName
+        WeatherRepository.currentSelectedCity = cityName
         val weather = WeatherRepository.getWeatherForCity(cityName)
 
         binding.tvCityName.text = weather.city
         binding.tvTempHuge.text = "${weather.tempCurrent}°"
         binding.tvConditionTemp.text = "${weather.tempCurrent}°C"
         binding.tvConditionDesc.text = weather.condition
-        binding.tvTempMin.text = "↑ ${weather.tempMin}°C"
-        binding.tvTempMax.text = "↓ ${weather.tempMax}°C"
+        binding.tvTempMin.text = "↓ ${weather.tempMin}°C"
+        binding.tvTempMax.text = "↑ ${weather.tempMax}°C"
 
         binding.tvRainUv.text = "Khả năng có mưa: ${weather.rainProb}% - UV: ${weather.uvIndex}"
         binding.tvAirQuality.text = "Chất lượng không khí: ${weather.aqi}"
