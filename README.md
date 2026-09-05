@@ -1,6 +1,18 @@
-# Lịch Việt (Vạn Niên) - Ứng Dụng Lịch Âm Dương Dân Gian Việt Nam
+# Lịch Việt (Vạn Niên) - Phiên bản v1.1.0
 
 Ứng dụng **Lịch Việt (Vạn Niên)** được thiết kế và phát triển chuyên sâu cho hệ điều hành Android, hỗ trợ các thiết bị từ **Android 8.0 (API 26) trở lên**. Ứng dụng mang phong cách nghệ thuật dân gian Việt Nam truyền thống, tích hợp thuật toán thiên văn học chuẩn xác tuyệt đối của **TS. Hồ Ngọc Đức (Viện Tin học, Đại học Leipzig)** theo múi giờ Việt Nam (UTC+7).
+
+### 🌟 Tính Năng Mới Trong Bản v1.1.0:
+- **Bộ 23 tranh dân gian Đông Hồ**: Thay thế 100% hình nền phong cảnh hiện đại bằng các tác phẩm tranh khắc gỗ dân gian Đông Hồ kinh điển (Đám cưới chuột, Chăn trâu thổi sáo, Lý ngư vọng nguyệt, Gà Đại Cát, Lợn đàn âm dương,...).
+- **Biểu tượng Bát Quái Tử Vi**: Thay thế icon vương miện trên thanh điều hướng và tiêu đề bằng biểu tượng Tiên thiên Bát Quái & Thái Cực Âm Dương chuẩn mực phong thủy.
+- **Widget Thời Tiết Trang Chủ**: Đặt đối xứng với "Hôm nay", "Đổi tranh", hiển thị icon sắc nét, nhiệt độ và tên thành phố với cỡ chữ to rõ.
+- **Nâng Cấp Toàn Diện Tab "Đổi Ngày"**:
+  - Hỗ trợ đầy đủ **Tháng Nhuận** 2 chiều Dương ⇄ Âm.
+  - Tự động chuẩn hóa số ngày âm lịch 29/30 ngày (`getDaysInLunarMonth`).
+  - Thẻ luận giải kết quả tức thì (Thứ, Can Chi 3 cột, Tiết khí, 6 Giờ Hoàng Đạo, Trực & Việc nên làm/kiêng).
+  - Thanh duyệt Tháng/Năm mới `◀ Tháng MM - YYYY ▶` cho tính năng "Tìm ngày tốt".
+  - Thẻ danh sách ngày tốt mới (`item_good_day.xml`) bo góc sang trọng, hiển thị đầy đủ thông số cát lành.
+- **Hoàn thiện 8 mục Tử Vi chuyên sâu**: Tử vi năm, Tử vi trọn đời, Sao Cửu Diệu, Gieo quẻ Kinh Dịch, Cẩm nang ngày tốt xấu, Xem tuổi hợp-xung, Ngày đẹp theo mệnh, Bát Trạch & Thước Lỗ Ban.
 
 ---
 
