@@ -78,7 +78,7 @@
     <string name="util_reminders">Cài đặt nhắc ngày Rằm, Mùng 1</string>
     <string name="util_change_bg">Đổi hình nền dân gian</string>
     <string name="util_about">Giới thiệu ứng dụng</string>
-    <string name="app_version">Phiên bản 1.1.0 (Hỗ trợ Android 8.0+)</string>
+    <string name="app_version">Phiên bản 1.2.0 (Hỗ trợ Android 8.0+)</string>
 
     <!-- Days of week -->
     <string name="day_monday">THỨ HAI</string>

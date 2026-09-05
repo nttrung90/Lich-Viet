@@ -1,18 +1,15 @@
-# Lịch Việt (Vạn Niên) - Phiên bản v1.1.0
+# Lịch Việt (Vạn Niên) - Phiên bản v1.2.0
 
 Ứng dụng **Lịch Việt (Vạn Niên)** được thiết kế và phát triển chuyên sâu cho hệ điều hành Android, hỗ trợ các thiết bị từ **Android 8.0 (API 26) trở lên**. Ứng dụng mang phong cách nghệ thuật dân gian Việt Nam truyền thống, tích hợp thuật toán thiên văn học chuẩn xác tuyệt đối của **TS. Hồ Ngọc Đức (Viện Tin học, Đại học Leipzig)** theo múi giờ Việt Nam (UTC+7).
 
-### 🌟 Tính Năng Mới Trong Bản v1.1.0:
-- **Bộ 23 tranh dân gian Đông Hồ**: Thay thế 100% hình nền phong cảnh hiện đại bằng các tác phẩm tranh khắc gỗ dân gian Đông Hồ kinh điển (Đám cưới chuột, Chăn trâu thổi sáo, Lý ngư vọng nguyệt, Gà Đại Cát, Lợn đàn âm dương,...).
-- **Biểu tượng Bát Quái Tử Vi**: Thay thế icon vương miện trên thanh điều hướng và tiêu đề bằng biểu tượng Tiên thiên Bát Quái & Thái Cực Âm Dương chuẩn mực phong thủy.
-- **Widget Thời Tiết Trang Chủ**: Đặt đối xứng với "Hôm nay", "Đổi tranh", hiển thị icon sắc nét, nhiệt độ và tên thành phố với cỡ chữ to rõ.
-- **Nâng Cấp Toàn Diện Tab "Đổi Ngày"**:
-  - Hỗ trợ đầy đủ **Tháng Nhuận** 2 chiều Dương ⇄ Âm.
-  - Tự động chuẩn hóa số ngày âm lịch 29/30 ngày (`getDaysInLunarMonth`).
-  - Thẻ luận giải kết quả tức thì (Thứ, Can Chi 3 cột, Tiết khí, 6 Giờ Hoàng Đạo, Trực & Việc nên làm/kiêng).
-  - Thanh duyệt Tháng/Năm mới `◀ Tháng MM - YYYY ▶` cho tính năng "Tìm ngày tốt".
-  - Thẻ danh sách ngày tốt mới (`item_good_day.xml`) bo góc sang trọng, hiển thị đầy đủ thông số cát lành.
-- **Hoàn thiện 8 mục Tử Vi chuyên sâu**: Tử vi năm, Tử vi trọn đời, Sao Cửu Diệu, Gieo quẻ Kinh Dịch, Cẩm nang ngày tốt xấu, Xem tuổi hợp-xung, Ngày đẹp theo mệnh, Bát Trạch & Thước Lỗ Ban.
+### 🌟 Tính Năng Mới Trong Bản v1.2.0:
+- **Bộ Sưu Tập 33 Kiệt Tác Tranh Dân Gian Việt Nam**: Mở rộng từ 23 lên 33 bức tranh dân gian danh tiếng (Đông Hồ, Hàng Trống, Kim Hoàng), gồm: *Vinh Quy Bái Tổ, Phù Đổng Thiên Vương, Ngũ Hổ Trấn Phương, Tứ Bình Tố Nữ, Bịt Mắt Bắt Dê, Thúy Kiều Gặp Kim Trọng, Bà Chúa Thượng Ngàn, Lợn Độc Kim Hoàng, Nghỉ Ngơi Dưới Gốc Đa, Bạch Hổ Uy Linh...*
+- **Trình Thưởng Thức Mỹ Thuật Dân Gian**: Hộp thoại chiêm ngưỡng toàn bộ 33 tác phẩm kèm tên tranh, dòng tranh xuất xứ, số thứ tự và lời giải nghĩa phong tục sâu sắc.
+- **Hoàn Thiện Tuyển Tập 9 Bài Văn Khấn Cổ Truyền**: Chuẩn phong tục nghi lễ Việt Nam (Mùng 1 & Rằm, Thần Tài - Thổ Địa, Giao Thừa trong nhà & ngoài trời, Mùng 1 Tết, Khai Trương, Động Thổ, Nhập Trạch, Tiễn Táo Quân 23 tháng Chạp, Lễ Vu Lan). Có bộ lọc chọn bài khấn thông minh.
+- **Nâng Cấp Thước Lỗ Ban & Phong Thủy Bát Trạch**: Bổ sung cẩm nang 3 loại thước (52.2cm, 42.9cm, 38.8cm) và Bảng Kích Thước Vàng phong thủy (cửa chính, cửa phòng, ban công, bàn thờ đứng).
+- **Lịch Ngày Lễ Truyền Thống Trong Năm**: Tra cứu chi tiết toàn bộ các ngày lễ Tết Âm lịch dân gian và các ngày lễ kỷ niệm Dương lịch của Việt Nam.
+- **Cài Đặt Nhắc Nhở Thông Minh**: Hộp thoại tùy chọn đa năng lưu trữ SharedPreferences cho ngày Sóc (Mùng 1), Vọng (Rằm 15), ngày lễ lớn và tự động đổi tranh dân gian trang chủ mỗi ngày.
+- **Đồng Bộ Giao Diện & Màu Nền**: Tối ưu màu nền `#D1E8E2` đồng nhất trên toàn bộ các tab chức năng.
 
 ---
 
@@ -27,7 +24,7 @@
   - **Cột phải**: Can Chi của Ngày (Ng.), Can Chi của Tháng (Th.), và Can Chi của Năm.
 - Cử chỉ chạm vuốt (Swipe Gesture) sang trái/phải để chuyển ngày mượt mà.
 - Nút bấm **"Hôm nay"** hình huy hiệu lịch giúp quay về ngày hiện tại tức thì.
-- Nút bấm **"Đổi tranh"** đổi qua lại giữa bộ sưu tập **23 bức tranh dân gian Việt Nam** bất hủ trên nền giấy điệp/giấy dó truyền thống (Đám cưới chuột, Chăn trâu thổi sáo, Lý ngư vọng nguyệt, Gà Đại Cát, Lợn đàn âm dương, Hứng dừa, Bé ôm gà Vinh Hoa, Bé ôm vịt Phú Quý, Mục đồng thả diều, Đấu vật dân gian, Thầy đồ Cóc, Ngô Quyền Bạch Đằng Giang, Bà Triệu cưỡi voi, Hai Bà Trưng ra trận, Ông Táo về trời...). 100% tranh nghệ thuật dân gian, không sử dụng ảnh chụp.
+- Nút bấm **"Đổi tranh"** đổi qua lại giữa bộ sưu tập **33 bức tranh dân gian Việt Nam** bất hủ trên nền giấy điệp/giấy dó truyền thống (Đông Hồ, Hàng Trống, Kim Hoàng). 100% tranh nghệ thuật dân gian, không sử dụng ảnh chụp.
 - Biểu tượng thời tiết nhanh trên thanh công cụ góc trái dẫn trực tiếp tới màn hình thời tiết.
 - Nút vương miện hoàng gia mở nhanh tính năng Tử Vi.
 
@@ -75,9 +72,11 @@ Lưới 8 mục Tử vi & Phong thủy chuyên sâu:
 - Thẻ tóm tắt thông tin ngày được chọn ở đáy màn hình.
 
 ### 7. Mở Rộng & Tiện Ích Phong Thủy
-- **Thước Lỗ Ban**: Thước 52.2cm (Thông thủy), Thước 42.9cm (Dương trạch), Thước 38.8cm (Âm phần).
-- **Văn khấn cổ truyền**: Tuyển tập văn khấn ngày Rằm, Mùng Một, Thần Tài, Lễ Tết.
-- **Cài đặt nhắc nhở**: Thông báo tự động ngày Rằm và Mùng 1 hàng tháng.
+- **Thước Lỗ Ban & Bát Trạch**: Thước 52.2cm (Thông thủy), Thước 42.9cm (Dương trạch), Thước 38.8cm (Âm phần) kèm Bảng Kích Thước Vàng phong thủy.
+- **Văn khấn cổ truyền**: Tuyển tập trọn bộ 9 bài văn khấn chuẩn phong tục tập quán (Mùng 1 & Rằm, Thần Tài, Giao Thừa, Khai Trương, Động Thổ, Nhập Trạch, Táo Quân, Vu Lan...).
+- **Lịch Ngày Lễ Truyền Thống**: Tra cứu toàn bộ các ngày lễ Âm lịch và Dương lịch trong năm.
+- **Bộ Sưu Tập 33 Tranh Dân Gian**: Xem chi tiết 33 bức tranh dân gian cùng ý nghĩa văn hóa, phong tục.
+- **Cài đặt nhắc nhở**: Tùy chỉnh thông báo ngày Sóc (Mùng 1), ngày Vọng (Rằm 15) và các ngày lễ lớn.
 
 ---
 
