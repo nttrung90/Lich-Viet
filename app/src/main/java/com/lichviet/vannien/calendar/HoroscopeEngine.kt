@@ -161,7 +161,7 @@ object HoroscopeEngine {
         val age = currentYear - birthYear + 1
         val tens = age / 10
         val units = age % 10
-        val hoangOcIndex = ((tens + units - 2) % 6 + 6) % 6
+        val hoangOcIndex = ((tens + units - 1) % 6 + 6) % 6
         val names = arrayOf(
             "Nhất Cát (Tốt: Làm nhà có chốn an cư, hanh thông)",
             "Nhì Nghi (Tốt: Làm nhà vượng phát, giàu có)",
@@ -291,7 +291,7 @@ object HoroscopeEngine {
             "Nhâm Dần" to "Kim Bạch Kim", "Quý Mão" to "Kim Bạch Kim",
             "Giáp Thìn" to "Phúc Đăng Hỏa", "Ất Tỵ" to "Phúc Đăng Hỏa",
             "Bính Ngọ" to "Thiên Hà Thủy", "Đinh Mùi" to "Thiên Hà Thủy",
-            "Mậu Thân" to "Đại Trạch Thổ", "Kỷ Dậu" to "Đại Trạch Thổ",
+            "Mậu Thân" to "Đại Dịch Thổ", "Kỷ Dậu" to "Đại Dịch Thổ",
             "Canh Tuất" to "Thoa Xuyến Kim", "Tân Hợi" to "Thoa Xuyến Kim",
             "Nhâm Tý" to "Tang Đố Mộc", "Quý Sửu" to "Tang Đố Mộc",
             "Giáp Dần" to "Đại Khê Thủy", "Ất Mão" to "Đại Khê Thủy",

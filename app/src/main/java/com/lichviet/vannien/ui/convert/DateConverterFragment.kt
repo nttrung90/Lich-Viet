@@ -24,6 +24,10 @@ class DateConverterFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var isUpdatingPickers = false
+    private var hasInitialized = false
+    private var currentSolarDay = 0
+    private var currentSolarMonth = 0
+    private var currentSolarYear = 0
     private lateinit var goodDayAdapter: GoodDayAdapter
     private val goodDayCalendar = Calendar.getInstance()
 
@@ -44,9 +48,21 @@ class DateConverterFragment : Fragment() {
         setupButtons()
         setupGoodDayFinder()
 
-        // Khởi tạo ngày hiện tại
-        val cal = Calendar.getInstance()
-        setSolarPickers(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.YEAR))
+        if (savedInstanceState != null) {
+            hasInitialized = savedInstanceState.getBoolean(KEY_HAS_INIT, false)
+            currentSolarDay = savedInstanceState.getInt(KEY_SOLAR_DAY, 0)
+            currentSolarMonth = savedInstanceState.getInt(KEY_SOLAR_MONTH, 0)
+            currentSolarYear = savedInstanceState.getInt(KEY_SOLAR_YEAR, 0)
+        }
+
+        if (!hasInitialized) {
+            hasInitialized = true
+            val cal = Calendar.getInstance()
+            currentSolarDay = cal.get(Calendar.DAY_OF_MONTH)
+            currentSolarMonth = cal.get(Calendar.MONTH) + 1
+            currentSolarYear = cal.get(Calendar.YEAR)
+        }
+        setSolarPickers(currentSolarDay, currentSolarMonth, currentSolarYear)
     }
 
     private fun setupTabs() {
@@ -63,9 +79,10 @@ class DateConverterFragment : Fragment() {
             binding.containerDoiNgay.visibility = View.GONE
             binding.containerTimNgayTot.visibility = View.VISIBLE
 
-            // Đồng bộ tháng tìm ngày tốt theo ngày đang chọn
-            goodDayCalendar.set(Calendar.YEAR, binding.pickerSolarYear.value)
-            goodDayCalendar.set(Calendar.MONTH, binding.pickerSolarMonth.value - 1)
+            // Đồng bộ tháng tìm ngày tốt theo ngày đang chọn (tránh lăn sai tháng do ngày vượt độ dài tháng mới)
+            goodDayCalendar.set(binding.pickerSolarYear.value, binding.pickerSolarMonth.value - 1, 1)
+            goodDayCalendar.set(Calendar.DAY_OF_MONTH,
+                minOf(binding.pickerSolarDay.value, goodDayCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)))
             updateGoodDayNavigator()
             loadGoodDays()
         }
@@ -176,12 +193,19 @@ class DateConverterFragment : Fragment() {
         binding.pickerSolarYear.value = year
         adjustSolarDaysRange()
         binding.pickerSolarDay.value = day.coerceAtMost(binding.pickerSolarDay.maxValue)
+        currentSolarDay = binding.pickerSolarDay.value
+        currentSolarMonth = month
+        currentSolarYear = year
         isUpdatingPickers = false
 
         updateLunarFromSolar(binding.pickerSolarDay.value, month, year)
     }
 
     private fun updateLunarFromSolar(sDay: Int, sMonth: Int, sYear: Int) {
+        currentSolarDay = sDay
+        currentSolarMonth = sMonth
+        currentSolarYear = sYear
+
         isUpdatingPickers = true
         val lunarRes = LunarCalendarEngine.convertSolar2Lunar(sDay, sMonth, sYear)
         binding.pickerLunarMonth.value = lunarRes.month
@@ -196,10 +220,15 @@ class DateConverterFragment : Fragment() {
 
     private fun updateSolarFromLunar(lDay: Int, lMonth: Int, lYear: Int, isLeap: Boolean) {
         isUpdatingPickers = true
-        var solarRes = LunarCalendarEngine.convertLunar2Solar(lDay, lMonth, lYear, isLeap)
+        val maxLunarDays = LunarCalendarEngine.getDaysInLunarMonth(lMonth, lYear, isLeap)
+        val validLunarDay = lDay.coerceAtMost(maxLunarDays)
+        binding.pickerLunarDay.maxValue = maxLunarDays
+        binding.pickerLunarDay.value = validLunarDay
+
+        var solarRes = LunarCalendarEngine.convertLunar2Solar(validLunarDay, lMonth, lYear, isLeap)
         if (solarRes.first == 0) {
             // Trường hợp tháng nhuận không hợp lệ
-            solarRes = LunarCalendarEngine.convertLunar2Solar(lDay, lMonth, lYear, false)
+            solarRes = LunarCalendarEngine.convertLunar2Solar(validLunarDay, lMonth, lYear, false)
         }
 
         if (solarRes.first > 0 && solarRes.second > 0 && solarRes.third > 0) {
@@ -207,7 +236,9 @@ class DateConverterFragment : Fragment() {
             binding.pickerSolarYear.value = solarRes.third
             adjustSolarDaysRange()
             binding.pickerSolarDay.value = solarRes.first.coerceIn(binding.pickerSolarDay.minValue, binding.pickerSolarDay.maxValue)
-            adjustLunarDaysRange(lMonth, lYear, isLeap)
+            currentSolarDay = binding.pickerSolarDay.value
+            currentSolarMonth = solarRes.second
+            currentSolarYear = solarRes.third
             updateLeapMonthUI(lMonth, lYear, isLeap)
             updateResultCard(binding.pickerSolarDay.value, solarRes.second, solarRes.third)
         }
@@ -374,8 +405,26 @@ class DateConverterFragment : Fragment() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(KEY_HAS_INIT, hasInitialized)
+        val sDay = if (_binding != null) binding.pickerSolarDay.value else currentSolarDay
+        val sMonth = if (_binding != null) binding.pickerSolarMonth.value else currentSolarMonth
+        val sYear = if (_binding != null) binding.pickerSolarYear.value else currentSolarYear
+        outState.putInt(KEY_SOLAR_DAY, sDay)
+        outState.putInt(KEY_SOLAR_MONTH, sMonth)
+        outState.putInt(KEY_SOLAR_YEAR, sYear)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val KEY_HAS_INIT = "key_has_init"
+        private const val KEY_SOLAR_DAY = "key_solar_day"
+        private const val KEY_SOLAR_MONTH = "key_solar_month"
+        private const val KEY_SOLAR_YEAR = "key_solar_year"
     }
 }

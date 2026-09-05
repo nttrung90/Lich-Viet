@@ -45,6 +45,14 @@ class DayCalendarFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (savedInstanceState != null) {
+            val savedTime = savedInstanceState.getLong(KEY_CURRENT_TIME, -1L)
+            if (savedTime != -1L) {
+                currentCalendar.timeInMillis = savedTime
+            }
+            customWallpaperOffset = savedInstanceState.getInt(KEY_WALLPAPER_OFFSET, 0)
+        }
+
         setupListeners()
         setupSwipeGesture()
         updateCalendarDisplay()
@@ -244,9 +252,20 @@ class DayCalendarFragment : Fragment() {
         binding.tvCanchiYear.text = "Năm ${lunarDate.canChiYear}"
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putLong(KEY_CURRENT_TIME, currentCalendar.timeInMillis)
+        outState.putInt(KEY_WALLPAPER_OFFSET, customWallpaperOffset)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         clockHandler.removeCallbacks(clockRunnable)
         _binding = null
+    }
+
+    companion object {
+        private const val KEY_CURRENT_TIME = "key_day_current_time"
+        private const val KEY_WALLPAPER_OFFSET = "key_day_wallpaper_offset"
     }
 }

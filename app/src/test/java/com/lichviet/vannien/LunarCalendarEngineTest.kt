@@ -135,4 +135,138 @@ class LunarCalendarEngineTest {
         assertNotNull(h2)
         assertTrue(h2!!.contains("Rằm tháng Giêng"))
     }
+
+    @Test
+    fun testHoangOcCalculation() {
+        // Tuổi 10 -> Nhất Cát (Tốt)
+        val (good10, name10) = HoroscopeEngine.checkHoangOc(2017, 2026) // age = 10
+        assertTrue(good10)
+        assertTrue(name10.startsWith("Nhất Cát"))
+
+        // Tuổi 20 -> Nhì Nghi (Tốt)
+        val (good20, name20) = HoroscopeEngine.checkHoangOc(2007, 2026) // age = 20
+        assertTrue(good20)
+        assertTrue(name20.startsWith("Nhì Nghi"))
+
+        // Tuổi 30 -> Tam Địa Sát (Xấu)
+        val (good30, name30) = HoroscopeEngine.checkHoangOc(1997, 2026) // age = 30
+        assertTrue(!good30)
+        assertTrue(name30.startsWith("Tam Địa Sát"))
+
+        // Tuổi 40 -> Tứ Tấn Tài (Tốt)
+        val (good40, name40) = HoroscopeEngine.checkHoangOc(1987, 2026) // age = 40
+        assertTrue(good40)
+        assertTrue(name40.startsWith("Tứ Tấn Tài"))
+
+        // Tuổi 50 -> Ngũ Thọ Tử (Xấu)
+        val (good50, name50) = HoroscopeEngine.checkHoangOc(1977, 2026) // age = 50
+        assertTrue(!good50)
+        assertTrue(name50.startsWith("Ngũ Thọ Tử"))
+
+        // Tuổi 60 -> Lục Hoang Ốc (Xấu)
+        val (good60, name60) = HoroscopeEngine.checkHoangOc(1967, 2026) // age = 60
+        assertTrue(!good60)
+        assertTrue(name60.startsWith("Lục Hoang Ốc"))
+
+        // Tuổi 61 -> Nhất Cát (Tốt)
+        val (good61, name61) = HoroscopeEngine.checkHoangOc(1966, 2026) // age = 61
+        assertTrue(good61)
+        assertTrue(name61.startsWith("Nhất Cát"))
+    }
+
+    @Test
+    fun testHoangDaoHoursAllSixGroups() {
+        // Nhóm 0: Tý, Ngọ -> {Thân, Dậu, Tý, Sửu, Mão, Ngọ}
+        val hoursTy = LunarCalendarEngine.calculateHoangDaoHours("Tý", "Giáp").map { it.chi }
+        assertEquals(listOf("Tý", "Sửu", "Mão", "Ngọ", "Thân", "Dậu"), hoursTy)
+
+        val hoursNgo = LunarCalendarEngine.calculateHoangDaoHours("Ngọ", "Giáp").map { it.chi }
+        assertEquals(listOf("Tý", "Sửu", "Mão", "Ngọ", "Thân", "Dậu"), hoursNgo)
+
+        // Nhóm 1: Sửu, Mùi -> {Tuất, Hợi, Dần, Mão, Tỵ, Thân}
+        val hoursSuu = LunarCalendarEngine.calculateHoangDaoHours("Sửu", "Ất").map { it.chi }
+        assertEquals(listOf("Dần", "Mão", "Tỵ", "Thân", "Tuất", "Hợi"), hoursSuu)
+
+        val hoursMui = LunarCalendarEngine.calculateHoangDaoHours("Mùi", "Ất").map { it.chi }
+        assertEquals(listOf("Dần", "Mão", "Tỵ", "Thân", "Tuất", "Hợi"), hoursMui)
+
+        // Nhóm 2: Dần, Thân -> {Tý, Sửu, Thìn, Tỵ, Mùi, Tuất}
+        val hoursDan = LunarCalendarEngine.calculateHoangDaoHours("Dần", "Bính").map { it.chi }
+        assertEquals(listOf("Tý", "Sửu", "Thìn", "Tỵ", "Mùi", "Tuất"), hoursDan)
+
+        val hoursThan = LunarCalendarEngine.calculateHoangDaoHours("Thân", "Bính").map { it.chi }
+        assertEquals(listOf("Tý", "Sửu", "Thìn", "Tỵ", "Mùi", "Tuất"), hoursThan)
+
+        // Nhóm 3: Mão, Dậu -> {Tý, Dần, Mão, Ngọ, Mùi, Dậu}
+        val hoursMao = LunarCalendarEngine.calculateHoangDaoHours("Mão", "Đinh").map { it.chi }
+        assertEquals(listOf("Tý", "Dần", "Mão", "Ngọ", "Mùi", "Dậu"), hoursMao)
+
+        val hoursDau = LunarCalendarEngine.calculateHoangDaoHours("Dậu", "Đinh").map { it.chi }
+        assertEquals(listOf("Tý", "Dần", "Mão", "Ngọ", "Mùi", "Dậu"), hoursDau)
+
+        // Nhóm 4: Thìn, Tuất -> {Dần, Thìn, Tỵ, Thân, Dậu, Hợi}
+        val hoursThin = LunarCalendarEngine.calculateHoangDaoHours("Thìn", "Mậu").map { it.chi }
+        assertEquals(listOf("Dần", "Thìn", "Tỵ", "Thân", "Dậu", "Hợi"), hoursThin)
+
+        val hoursTuat = LunarCalendarEngine.calculateHoangDaoHours("Tuất", "Mậu").map { it.chi }
+        assertEquals(listOf("Dần", "Thìn", "Tỵ", "Thân", "Dậu", "Hợi"), hoursTuat)
+
+        // Nhóm 5: Tỵ, Hợi -> {Sửu, Thìn, Ngọ, Mùi, Tuất, Hợi}
+        val hoursTy5 = LunarCalendarEngine.calculateHoangDaoHours("Tỵ", "Kỷ").map { it.chi }
+        assertEquals(listOf("Sửu", "Thìn", "Ngọ", "Mùi", "Tuất", "Hợi"), hoursTy5)
+
+        val hoursHoi = LunarCalendarEngine.calculateHoangDaoHours("Hợi", "Kỷ").map { it.chi }
+        assertEquals(listOf("Sửu", "Thìn", "Ngọ", "Mùi", "Tuất", "Hợi"), hoursHoi)
+    }
+
+    @Test
+    fun testNapAmCorrection() {
+        // Năm 1968 là Mậu Thân -> Đại Dịch Thổ
+        val (napAm1968, hanh1968) = HoroscopeEngine.getNapAm(1968)
+        assertEquals("Đại Dịch Thổ", napAm1968)
+        assertEquals("Thổ", hanh1968)
+
+        // Năm 1969 là Kỷ Dậu -> Đại Dịch Thổ
+        val (napAm1969, hanh1969) = HoroscopeEngine.getNapAm(1969)
+        assertEquals("Đại Dịch Thổ", napAm1969)
+        assertEquals("Thổ", hanh1969)
+    }
+
+    @Test
+    fun testTietKhiBoundaryDay() {
+        // Ngày 04/02/2024 là ngày Lập Xuân (chuyển tiết lúc ~16:27 UTC+7)
+        val dateLapXuan = LunarCalendarEngine.getFullLunarDate(4, 2, 2024)
+        assertEquals("Lập Xuân", dateLapXuan.tietKhi)
+
+        // Ngày 03/02/2024 vẫn là tiết Đại Hàn
+        val dateBeforeLapXuan = LunarCalendarEngine.getFullLunarDate(3, 2, 2024)
+        assertEquals("Đại Hàn", dateBeforeLapXuan.tietKhi)
+
+        // Ngày 20/03/2024 là ngày Xuân Phân (chuyển tiết lúc ~10:06 UTC+7)
+        val dateXuanPhan = LunarCalendarEngine.getFullLunarDate(20, 3, 2024)
+        assertEquals("Xuân Phân", dateXuanPhan.tietKhi)
+    }
+
+    @Test
+    fun testLunar30To29MonthConversion() {
+        var shortMonth = 1
+        val shortYear = 2024
+        for (m in 1..12) {
+            if (LunarCalendarEngine.getDaysInLunarMonth(m, shortYear) == 29) {
+                shortMonth = m
+                break
+            }
+        }
+        assertEquals(29, LunarCalendarEngine.getDaysInLunarMonth(shortMonth, shortYear))
+
+        val maxDays = LunarCalendarEngine.getDaysInLunarMonth(shortMonth, shortYear)
+        val clampedDay = 30.coerceAtMost(maxDays)
+        assertEquals(29, clampedDay)
+
+        val (sD, sM, sY) = LunarCalendarEngine.convertLunar2Solar(clampedDay, shortMonth, shortYear)
+        val backLunar = LunarCalendarEngine.convertSolar2Lunar(sD, sM, sY)
+        assertEquals(29, backLunar.day)
+        assertEquals(shortMonth, backLunar.month)
+        assertEquals(shortYear, backLunar.year)
+    }
 }

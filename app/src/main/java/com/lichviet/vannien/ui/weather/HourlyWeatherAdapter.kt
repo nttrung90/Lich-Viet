@@ -44,7 +44,7 @@ class HourlyWeatherAdapter(
             tvTime.text = item.time
             tvCondition.text = item.condition
             tvTemp.text = "${item.temp}°C"
-            ivIcon.setImageResource(R.drawable.ic_weather_sun_cloud)
+            ivIcon.setImageResource(WeatherRepository.getWeatherIcon(item.condition))
         }
     }
 }

@@ -178,6 +178,17 @@ object LunarCalendarEngine {
     }
 
     /**
+     * Tính kinh độ Mặt Trời tại một giờ cụ thể trong ngày JDN (giờ từ 0.0 đến 24.0)
+     */
+    fun getSunLongitudeAtHour(jdn: Int, hour: Double, timeZone: Double = TIMEZONE): Double {
+        val rad = sunLongitudeRadian(jdn - 0.5 - timeZone / 24.0 + hour / 24.0)
+        var deg = rad * 180.0 / PI
+        deg %= 360.0
+        if (deg < 0) deg += 360.0
+        return deg
+    }
+
+    /**
      * Tìm ngày Sóc của tháng 11 âm lịch (tháng chứa điểm Đông Chí) theo TS. Hồ Ngọc Đức
      */
     fun getLunarMonth11(yy: Int, timeZone: Double = TIMEZONE): Int {
@@ -358,9 +369,23 @@ object LunarCalendarEngine {
         val daysOfWeek = arrayOf("Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy")
         val dayOfWeek = daysOfWeek[dayOfWeekIndex]
 
-        // Tiết khí (từ 0 đến 23)
-        val sunLong = getSunLongitude(jd, TIMEZONE)
-        val tietKhiIndex = floor(sunLong / 15.0).toInt() % 24
+        // Tiết khí (từ 0 đến 23): quét theo giờ trong ngày để xác định tiết khí mới nếu ngày chuyển tiết
+        val startSunLong = getSunLongitudeAtHour(jd, 0.0, TIMEZONE)
+        val startTietKhiIndex = floor(startSunLong / 15.0).toInt() % 24
+        var tietKhiIndex = startTietKhiIndex
+        for (h in 1..23) {
+            val curIndex = floor(getSunLongitudeAtHour(jd, h.toDouble(), TIMEZONE) / 15.0).toInt() % 24
+            if (curIndex != startTietKhiIndex) {
+                tietKhiIndex = curIndex
+                break
+            }
+        }
+        if (tietKhiIndex == startTietKhiIndex) {
+            val endDayIndex = floor(getSunLongitudeAtHour(jd, 23.99, TIMEZONE) / 15.0).toInt() % 24
+            if (endDayIndex != startTietKhiIndex) {
+                tietKhiIndex = endDayIndex
+            }
+        }
         val tietKhi = TIET_KHI[tietKhiIndex]
 
         // Trực của ngày
@@ -445,11 +470,11 @@ object LunarCalendarEngine {
     /**
      * Tính 6 Giờ Hoàng Đạo trong 12 giờ của ngày
      */
-    private fun calculateHoangDaoHours(chiDay: String, canDay: String): List<HoangDaoHour> {
+    internal fun calculateHoangDaoHours(chiDay: String, canDay: String): List<HoangDaoHour> {
         val chiDayIdx = chiDayIndex(chiDay)
         val hoangDaoMask = when (chiDayIdx % 6) {
-            0 -> intArrayOf(1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0) // Tý, Ngọ
-            1 -> intArrayOf(0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1) // Sửu, Mùi
+            0 -> intArrayOf(1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0) // Tý, Ngọ: Tý, Sửu, Mão, Ngọ, Thân, Dậu
+            1 -> intArrayOf(0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1) // Sửu, Mùi: Dần, Mão, Tỵ, Thân, Tuất, Hợi
             2 -> intArrayOf(1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0) // Dần, Thân
             3 -> intArrayOf(1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0) // Mão, Dậu
             4 -> intArrayOf(0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1) // Thìn, Tuất

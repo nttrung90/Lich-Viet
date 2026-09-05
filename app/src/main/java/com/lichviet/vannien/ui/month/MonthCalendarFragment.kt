@@ -46,7 +46,18 @@ class MonthCalendarFragment : Fragment() {
         setupRecyclerView()
         setupListeners()
         setupSwipeGesture()
-        loadMonthData()
+
+        val preferredDay = if (savedInstanceState != null) {
+            val savedTime = savedInstanceState.getLong(KEY_DISPLAY_TIME, -1L)
+            if (savedTime != -1L) {
+                displayCalendar.timeInMillis = savedTime
+            }
+            if (savedInstanceState.containsKey(KEY_SELECTED_SOLAR_DAY)) {
+                savedInstanceState.getInt(KEY_SELECTED_SOLAR_DAY)
+            } else null
+        } else null
+
+        loadMonthData(preferredDay)
     }
 
     private fun setupRecyclerView() {
@@ -95,22 +106,27 @@ class MonthCalendarFragment : Fragment() {
         if (isAnimating) return
         isAnimating = true
 
-        val width = binding.rvCalendarGrid.width.toFloat()
+        val b = _binding ?: return
+        val width = b.rvCalendarGrid.width.toFloat()
         val travelDistance = if (width > 0) width * 0.25f else 250f
         val exitTranslation = if (toNext) -travelDistance else travelDistance
         val enterTranslation = if (toNext) travelDistance else -travelDistance
 
-        binding.rvCalendarGrid.animate()
+        b.rvCalendarGrid.animate()
             .translationX(exitTranslation)
             .alpha(0.15f)
             .setDuration(120)
             .withEndAction {
+                val endB = _binding ?: run {
+                    isAnimating = false
+                    return@withEndAction
+                }
                 if (preferredDay == null) {
                     displayCalendar.add(Calendar.MONTH, if (toNext) 1 else -1)
                 }
                 loadMonthData(preferredDay)
-                binding.rvCalendarGrid.translationX = enterTranslation
-                binding.rvCalendarGrid.animate()
+                endB.rvCalendarGrid.translationX = enterTranslation
+                endB.rvCalendarGrid.animate()
                     .translationX(0f)
                     .alpha(1f)
                     .setDuration(150)
@@ -141,12 +157,14 @@ class MonthCalendarFragment : Fragment() {
 
             displayCalendar.timeInMillis = System.currentTimeMillis()
             if (isDiff) {
-                binding.rvCalendarGrid.animate()
+                val b = _binding ?: return@setOnClickListener
+                b.rvCalendarGrid.animate()
                     .alpha(0.2f)
                     .setDuration(100)
                     .withEndAction {
+                        val endB = _binding ?: return@withEndAction
                         loadMonthData(now.get(Calendar.DAY_OF_MONTH))
-                        binding.rvCalendarGrid.animate().alpha(1f).setDuration(120).start()
+                        endB.rvCalendarGrid.animate().alpha(1f).setDuration(120).start()
                     }
                     .start()
             } else {
@@ -492,8 +510,23 @@ class MonthCalendarFragment : Fragment() {
         binding.tvSummaryExtra.text = "Tiết khí: ${full.tietKhi} • Trực: ${full.truc}"
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putLong(KEY_DISPLAY_TIME, displayCalendar.timeInMillis)
+        selectedDayModel?.let {
+            outState.putInt(KEY_SELECTED_SOLAR_DAY, it.solarDay)
+        }
+    }
+
     override fun onDestroyView() {
+        _binding?.rvCalendarGrid?.animate()?.cancel()
+        isAnimating = false
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val KEY_DISPLAY_TIME = "key_month_display_time"
+        private const val KEY_SELECTED_SOLAR_DAY = "key_month_selected_solar_day"
     }
 }

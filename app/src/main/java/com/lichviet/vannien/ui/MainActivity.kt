@@ -38,6 +38,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupBottomNavigation() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
+            if (item.itemId == binding.bottomNavigation.selectedItemId && supportFragmentManager.findFragmentById(R.id.fragment_container) != null) {
+                return@setOnItemSelectedListener true
+            }
             when (item.itemId) {
                 R.id.navigation_day -> {
                     loadFragment(TAG_DAY) { DayCalendarFragment() }

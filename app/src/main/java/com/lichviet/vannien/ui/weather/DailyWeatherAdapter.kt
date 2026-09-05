@@ -44,7 +44,7 @@ class DailyWeatherAdapter(
             tvDayName.text = item.dayName
             tvCondition.text = item.condition
             tvTemp.text = "${item.tempMin}° - ${item.tempMax}°C"
-            ivIcon.setImageResource(R.drawable.ic_weather_sun_cloud)
+            ivIcon.setImageResource(WeatherRepository.getWeatherIcon(item.condition))
         }
     }
 }

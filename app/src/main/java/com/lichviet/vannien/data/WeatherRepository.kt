@@ -1,5 +1,7 @@
 package com.lichviet.vannien.data
 
+import com.lichviet.vannien.R
+
 /**
  * Kho dữ liệu và mô hình dự báo thời tiết theo tỉnh thành Việt Nam
  */
@@ -91,5 +93,16 @@ object WeatherRepository {
             hourlyForecast = hourly,
             dailyForecast = daily
         )
+    }
+
+    fun getWeatherIcon(condition: String): Int {
+        val cond = condition.lowercase()
+        return when {
+            cond.contains("dông") || cond.contains("sấm") || cond.contains("sét") || cond.contains("bão") -> R.drawable.ic_weather_thunder
+            cond.contains("mưa") -> R.drawable.ic_weather_rainy
+            cond.contains("rất nhiều mây") || cond.contains("u ám") -> R.drawable.ic_weather_cloudy
+            cond.contains("nắng") || cond.contains("quang") -> R.drawable.ic_weather_sunny
+            else -> R.drawable.ic_weather_sun_cloud
+        }
     }
 }

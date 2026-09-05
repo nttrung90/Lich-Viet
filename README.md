@@ -1,6 +1,19 @@
-# Lịch Việt (Vạn Niên) - Phiên bản v1.2.1
+# Lịch Việt (Vạn Niên) - Phiên bản v1.2.2
 
 Ứng dụng **Lịch Việt (Vạn Niên)** được thiết kế và phát triển chuyên sâu cho hệ điều hành Android, hỗ trợ các thiết bị từ **Android 8.0 (API 26) trở lên**. Ứng dụng mang phong cách nghệ thuật dân gian Việt Nam truyền thống, tích hợp thuật toán thiên văn học chuẩn xác tuyệt đối của **TS. Hồ Ngọc Đức (Viện Tin học, Đại học Leipzig)** theo múi giờ Việt Nam (UTC+7).
+
+### 🌟 Cập Nhật & Sửa Lỗi Trong Bản v1.2.2:
+- **Khắc phục hạn Hoang Ốc**: Sửa công thức tính hạn Hoang Ốc bị lệch 1 cung, đảm bảo tuổi 10→Nhất Cát, 20→Nhì Nghi, 30→Tam Địa Sát, 40→Tứ Tấn Tài, 50→Ngũ Thọ Tử, 60→Lục Hoang Ốc.
+- **Khắc phục crash NPE chuyển tháng**: Thêm guard an toàn trong callback animation và hủy animation khi hủy view (`MonthCalendarFragment`).
+- **Sửa lăn sai tháng khi tìm ngày tốt**: Kẹp ngày hợp lệ theo độ dài tháng thực tế trước khi gán ngày, tránh tự động nhảy tháng trên `DateConverterFragment`.
+- **Chuẩn hóa Giờ Hoàng Đạo**: Sửa bitmask giờ hoàng đạo các ngày Tý/Ngọ ({Thân, Dậu, Tý, Sửu, Mão, Ngọ}) và Sửu/Mùi ({Tuất, Hợi, Dần, Mão, Tỵ, Thân}) theo đúng quy tắc Thanh Long Hoàng Đạo khởi.
+- **Tránh rebuild tab đang chọn**: Không tải lại Fragment khi người dùng chạm lại vào tab hiện tại trên thanh điều hướng (`MainActivity`).
+- **Bảo toàn bộ chọn ngày chuyển đổi**: Không bị reset về ngày hiện tại khi quay lại tab Đổi ngày.
+- **Kẹp ngày âm 30 sang tháng 29 ngày**: Tự động kẹp ngày 30 về 29 trước khi chuyển sang dương lịch để kết quả luôn nhất quán.
+- **Bộ icon thời tiết trực quan**: Tích hợp icon vector mới theo từng trạng thái (nắng, mưa, mây, dông) thay vì một icon duy nhất.
+- **Đính chính Ngũ Hành Nạp Âm**: Sửa tên "Đại Trạch Thổ" thành "Đại Dịch Thổ" cho tuổi Mậu Thân và Kỷ Dậu.
+- **Xác định Tiết Khí chuẩn ngày biên**: Quét kinh độ mặt trời theo giờ trong ngày, nhận diện chính xác ngày bắt đầu tiết khí mới (ví dụ Lập Xuân, Xuân Phân).
+- **Lưu và phục hồi trạng thái**: Bảo toàn ngày đang xem trên Lịch Ngày và Lịch Tháng khi Activity bị tái tạo.
 
 ### 🌟 Cập Nhật & Sửa Lỗi Trong Bản v1.2.1:
 - **Khắc phục lỗi Bát Trạch Phong Thủy**: Sửa lỗi toán tử ưu tiên khiến quái số phong thủy rơi vào giá trị 0 ở một số năm sinh (như 1991, 1994, 2000...).

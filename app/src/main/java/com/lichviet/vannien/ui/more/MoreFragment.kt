@@ -187,7 +187,7 @@ class MoreFragment : Fragment() {
             .setTitle("Lịch Việt (Vạn Niên)")
             .setMessage(
                 """
-                Ứng dụng Lịch Việt (Vạn Niên) - Phiên bản 1.2.1
+                Ứng dụng Lịch Việt (Vạn Niên) - Phiên bản 1.2.2
 
                 • Tác giả & Phát triển: Đội ngũ Lịch Việt
                 • Thuật toán Âm Dương: Kế thừa công trình tính toán thiên văn học chính xác tuyệt đối của TS. Hồ Ngọc Đức (Múi giờ Việt Nam UTC+7).
