@@ -281,7 +281,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="Chiêm ngưỡng 23 kiệt tác Đông Hồ, Hàng Trống &amp; ý nghĩa"
+                            android:text="Chiêm ngưỡng 33 kiệt tác Đông Hồ, Hàng Trống, Kim Hoàng &amp; ý nghĩa"
                             android:textColor="#666666"
                             android:textSize="12sp" />
                     </LinearLayout>

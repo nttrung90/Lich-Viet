@@ -152,6 +152,66 @@ object FolkArtRepository {
             "Đánh ghen dân gian",
             "Tranh Dân Gian Đông Hồ",
             "Tranh ngụ ngôn châm biếm sâu sắc của dòng tranh Đông Hồ, răn dạy đạo nghĩa vợ chồng, giữ gìn hòa khí và khuôn phép gia phong."
+        ),
+        FolkArtwork(
+            R.drawable.bg_folk_vinh_quy,
+            "Vinh quy bái tổ",
+            "Tranh Dân Gian Đông Hồ",
+            "Biểu tượng sâu sắc của truyền thống hiếu học và đạo lý 'uống nước nhớ nguồn', tân khoa Trạng nguyên đỗ đạt rước cờ hoa về làng bái tạ tổ tiên, cha mẹ và thầy dạy."
+        ),
+        FolkArtwork(
+            R.drawable.bg_folk_phu_dong,
+            "Phù Đổng Thiên Vương",
+            "Tranh Lịch Sử Đông Hồ",
+            "Hình tượng Thánh Gióng cưỡi ngựa sắt, nhổ tre ngà quét sạch giặc ngoại xâm, biểu trưng cho ý chí quật cường và sức mạnh quật khởi của dân tộc Việt Nam."
+        ),
+        FolkArtwork(
+            R.drawable.bg_folk_ngu_ho,
+            "Ngũ Hổ Trấn Phương",
+            "Tranh Dân Gian Hàng Trống",
+            "Kiệt tác tranh thờ Hàng Trống với năm ông hổ uy linh trấn giữ năm phương trời và ngũ hành, mang ý nghĩa trấn trạch trừ tà, đem lại bình an đại cát."
+        ),
+        FolkArtwork(
+            R.drawable.bg_folk_to_nu,
+            "Tứ Bình Tố Nữ",
+            "Tranh Dân Gian Hàng Trống",
+            "Đỉnh cao nghệ thuật Hàng Trống họa bốn thiếu nữ cầm kỳ thi họa hòa tấu nhạc cụ cổ truyền dân tộc, ngợi ca vẻ đẹp đoan trang, tài hoa và thanh lịch của phụ nữ Việt."
+        ),
+        FolkArtwork(
+            R.drawable.bg_folk_bit_mat,
+            "Bịt mắt bắt dê",
+            "Tranh Dân Gian Hàng Trống",
+            "Tái hiện trò chơi dân gian rộn rã tiếng cười trong những ngày hội xuân truyền thống, thể hiện tinh thần lạc quan, yêu đời và gắn kết cộng đồng thôn xóm."
+        ),
+        FolkArtwork(
+            R.drawable.bg_folk_thuy_kieu,
+            "Thúy Kiều gặp Kim Trọng",
+            "Tranh Truyện Kiều Hàng Trống",
+            "Bức họa cổ truyền tao nhã khắc họa mối tình tài tử giai nhân trong kiệt tác Truyện Kiều của Đại thi hào Nguyễn Du nơi tiết thanh minh đầu xuân."
+        ),
+        FolkArtwork(
+            R.drawable.bg_folk_ba_chua,
+            "Bà Chúa Thượng Ngàn",
+            "Tranh Thờ Dân Gian Hàng Trống",
+            "Đệ nhị Thượng Ngàn trong tín ngưỡng Tam phủ Tứ phủ của người Việt, vị thánh mẫu cai quản núi rừng, ban phát lộc rừng, che chở mùa màng bội thu."
+        ),
+        FolkArtwork(
+            R.drawable.bg_folk_lon_kim_hoang,
+            "Lợn Độc Kim Hoàng",
+            "Tranh Dân Gian Kim Hoàng",
+            "Kiệt tác của dòng tranh đỏ Kim Hoàng (Hà Nội xưa) trên nền giấy hồng điều rực rỡ, mang lời chúc cho gia chủ cả năm ấm no, sung túc và phát tài."
+        ),
+        FolkArtwork(
+            R.drawable.bg_folk_nghi_ngoi,
+            "Nghỉ ngơi dưới gốc đa",
+            "Tranh Dân Gian Đông Hồ",
+            "Khắc họa nét đẹp bình dị, thảnh thơi của người nông dân trò chuyện bên bóng đa mát rượi sau giờ lao động trên đồng ruộng, tâm hồn an nhiên tự tại."
+        ),
+        FolkArtwork(
+            R.drawable.bg_folk_bach_ho,
+            "Bạch Hổ uy linh",
+            "Tranh Dân Gian Hàng Trống",
+            "Linh vật dũng mãnh trấn giữ phương Tây (hành Kim), mang năng lượng trừ tà bảo an, hộ trì bình yên và tạo dựng phúc khí vững bền."
         )
     )
 }

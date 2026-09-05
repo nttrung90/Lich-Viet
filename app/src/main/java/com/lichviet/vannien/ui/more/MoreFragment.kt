@@ -191,7 +191,7 @@ class MoreFragment : Fragment() {
 
                 • Tác giả & Phát triển: Đội ngũ Lịch Việt
                 • Thuật toán Âm Dương: Kế thừa công trình tính toán thiên văn học chính xác tuyệt đối của TS. Hồ Ngọc Đức (Múi giờ Việt Nam UTC+7).
-                • Mỹ thuật Dân Gian: Tuyển tập 23 kiệt tác Tranh Dân Gian Đông Hồ & Tranh Tết Việt Nam đậm đà bản sắc dân tộc.
+                • Mỹ thuật Dân Gian: Tuyển tập 33 kiệt tác Tranh Dân Gian Đông Hồ, Hàng Trống & Kim Hoàng đậm đà bản sắc dân tộc.
                 • Tính năng toàn diện:
                    - Lịch Ngày, Giờ Hoàng Đạo, Hướng xuất hành
                    - Lịch Tháng vạn niên, Đổi ngày Âm - Dương
