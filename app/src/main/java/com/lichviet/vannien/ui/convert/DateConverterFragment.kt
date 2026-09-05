@@ -1,6 +1,7 @@
-package com.lichviet.vannien.ui.convert
+﻿package com.lichviet.vannien.ui.convert
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import com.lichviet.vannien.calendar.LunarCalendarEngine
 import com.lichviet.vannien.databinding.FragmentDateConverterBinding
 import com.lichviet.vannien.ui.detail.DayDetailActivity
 import java.util.Calendar
+import java.util.Locale
 
 class DateConverterFragment : Fragment() {
 
@@ -23,6 +25,7 @@ class DateConverterFragment : Fragment() {
 
     private var isUpdatingPickers = false
     private lateinit var goodDayAdapter: GoodDayAdapter
+    private val goodDayCalendar = Calendar.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,6 +62,11 @@ class DateConverterFragment : Fragment() {
             binding.tabDoiNgay.setBackgroundResource(R.drawable.bg_tab_unselected)
             binding.containerDoiNgay.visibility = View.GONE
             binding.containerTimNgayTot.visibility = View.VISIBLE
+
+            // Đồng bộ tháng tìm ngày tốt theo ngày đang chọn
+            goodDayCalendar.set(Calendar.YEAR, binding.pickerSolarYear.value)
+            goodDayCalendar.set(Calendar.MONTH, binding.pickerSolarMonth.value - 1)
+            updateGoodDayNavigator()
             loadGoodDays()
         }
     }
@@ -100,12 +108,23 @@ class DateConverterFragment : Fragment() {
                 val lDay = binding.pickerLunarDay.value
                 val lMonth = binding.pickerLunarMonth.value
                 val lYear = binding.pickerLunarYear.value
-                updateSolarFromLunar(lDay, lMonth, lYear)
+                val isLeap = binding.cbLunarLeap.isChecked
+                updateSolarFromLunar(lDay, lMonth, lYear, isLeap)
             }
         }
         binding.pickerLunarDay.setOnValueChangedListener(lunarListener)
         binding.pickerLunarMonth.setOnValueChangedListener(lunarListener)
         binding.pickerLunarYear.setOnValueChangedListener(lunarListener)
+
+        // Checkbox Tháng Nhuận
+        binding.cbLunarLeap.setOnCheckedChangeListener { _, isChecked ->
+            if (!isUpdatingPickers) {
+                val lDay = binding.pickerLunarDay.value
+                val lMonth = binding.pickerLunarMonth.value
+                val lYear = binding.pickerLunarYear.value
+                updateSolarFromLunar(lDay, lMonth, lYear, isChecked)
+            }
+        }
     }
 
     private fun adjustSolarDaysRange() {
@@ -125,6 +144,32 @@ class DateConverterFragment : Fragment() {
         }
     }
 
+    private fun adjustLunarDaysRange(lMonth: Int, lYear: Int, isLeap: Boolean) {
+        val maxDays = LunarCalendarEngine.getDaysInLunarMonth(lMonth, lYear, isLeap)
+        binding.pickerLunarDay.maxValue = maxDays
+        if (binding.pickerLunarDay.value > maxDays) {
+            binding.pickerLunarDay.value = maxDays
+        }
+    }
+
+    private fun updateLeapMonthUI(lMonth: Int, lYear: Int, isLeapResult: Boolean) {
+        val leapMonth = LunarCalendarEngine.getLeapMonthOfYear(lYear)
+        if (leapMonth > 0) {
+            binding.tvLeapInfo.text = "(Năm này nhuận Tháng $leapMonth)"
+            if (lMonth == leapMonth) {
+                binding.cbLunarLeap.isEnabled = true
+                binding.cbLunarLeap.isChecked = isLeapResult
+            } else {
+                binding.cbLunarLeap.isChecked = false
+                binding.cbLunarLeap.isEnabled = false
+            }
+        } else {
+            binding.tvLeapInfo.text = "(Năm nay không có tháng nhuận)"
+            binding.cbLunarLeap.isChecked = false
+            binding.cbLunarLeap.isEnabled = false
+        }
+    }
+
     private fun setSolarPickers(day: Int, month: Int, year: Int) {
         isUpdatingPickers = true
         binding.pickerSolarMonth.value = month
@@ -138,21 +183,77 @@ class DateConverterFragment : Fragment() {
 
     private fun updateLunarFromSolar(sDay: Int, sMonth: Int, sYear: Int) {
         isUpdatingPickers = true
-        val (lDay, lMonth, lYear) = LunarCalendarEngine.convertSolar2Lunar(sDay, sMonth, sYear)
-        binding.pickerLunarDay.value = lDay
-        binding.pickerLunarMonth.value = lMonth
-        binding.pickerLunarYear.value = lYear
+        val lunarRes = LunarCalendarEngine.convertSolar2Lunar(sDay, sMonth, sYear)
+        binding.pickerLunarMonth.value = lunarRes.month
+        binding.pickerLunarYear.value = lunarRes.year
+        adjustLunarDaysRange(lunarRes.month, lunarRes.year, lunarRes.isLeap)
+        binding.pickerLunarDay.value = lunarRes.day.coerceAtMost(binding.pickerLunarDay.maxValue)
+        updateLeapMonthUI(lunarRes.month, lunarRes.year, lunarRes.isLeap)
         isUpdatingPickers = false
+
+        updateResultCard(sDay, sMonth, sYear)
     }
 
-    private fun updateSolarFromLunar(lDay: Int, lMonth: Int, lYear: Int) {
+    private fun updateSolarFromLunar(lDay: Int, lMonth: Int, lYear: Int, isLeap: Boolean) {
         isUpdatingPickers = true
-        val (sDay, sMonth, sYear) = LunarCalendarEngine.convertLunar2Solar(lDay, lMonth, lYear)
-        binding.pickerSolarMonth.value = sMonth
-        binding.pickerSolarYear.value = sYear
+        var solarRes = LunarCalendarEngine.convertLunar2Solar(lDay, lMonth, lYear, isLeap)
+        if (solarRes.first == 0) {
+            // Trường hợp tháng nhuận không hợp lệ
+            solarRes = LunarCalendarEngine.convertLunar2Solar(lDay, lMonth, lYear, false)
+        }
+
+        binding.pickerSolarMonth.value = solarRes.second
+        binding.pickerSolarYear.value = solarRes.third
         adjustSolarDaysRange()
-        binding.pickerSolarDay.value = sDay.coerceAtMost(binding.pickerSolarDay.maxValue)
+        binding.pickerSolarDay.value = solarRes.first.coerceAtMost(binding.pickerSolarDay.maxValue)
+        adjustLunarDaysRange(lMonth, lYear, isLeap)
+        updateLeapMonthUI(lMonth, lYear, isLeap)
         isUpdatingPickers = false
+
+        updateResultCard(binding.pickerSolarDay.value, solarRes.second, solarRes.third)
+    }
+
+    private fun updateResultCard(sDay: Int, sMonth: Int, sYear: Int) {
+        val dateInfo = LunarCalendarEngine.getFullLunarDate(sDay, sMonth, sYear)
+
+        binding.tvResultSolar.text = "${dateInfo.dayOfWeek}, ${String.format(Locale.getDefault(), "%02d/%02d/%d", sDay, sMonth, sYear)} Dương Lịch"
+
+        val leapText = if (dateInfo.isLeap) " (Nhuận)" else ""
+        binding.tvResultLunar.text = "Tức Ngày ${dateInfo.day} Tháng ${dateInfo.month}$leapText (Năm ${dateInfo.canChiYear} Âm Lịch)"
+
+        if (dateInfo.isHoangDao) {
+            binding.tvResultBadge.text = "HOÀNG ĐẠO"
+            binding.tvResultBadge.setTextColor(Color.parseColor("#1B5E20"))
+        } else {
+            binding.tvResultBadge.text = "HẮC ĐẠO"
+            binding.tvResultBadge.setTextColor(Color.parseColor("#C62828"))
+        }
+
+        binding.tvResultCanchi.text = "Can Chi: Ngày ${dateInfo.canChiDay} • Tháng ${dateInfo.canChiMonth} • Năm ${dateInfo.canChiYear}"
+        binding.tvResultTietKhi.text = "Tiết khí: ${dateInfo.tietKhi}"
+
+        val hoursStr = if (dateInfo.hoangDaoHours.isNotEmpty()) {
+            dateInfo.hoangDaoHours.take(6).joinToString(", ") { it.name.split(" ").firstOrNull() ?: it.name }
+        } else {
+            "Tý, Sửu, Mão, Ngọ, Thân, Dậu"
+        }
+        binding.tvResultGoodHours.text = "Giờ Hoàng Đạo: $hoursStr"
+
+        val adviceStr = when (dateInfo.truc) {
+            "Kiến" -> "Trực Kiến (Tốt) • Khởi sự công việc, xuất hành; tránh động thổ cất nóc"
+            "Trừ" -> "Trực Trừ (Đại cát) • Tẩy uế, dọn dẹp, trị bệnh, giải oan, an táng"
+            "Mãn" -> "Trực Mãn (Cát tinh) • Mở kho, khai trương, xuất kho, nạp tài"
+            "Bình" -> "Trực Bình (Bình hòa) • San nền, sửa chữa, hòa giải, việc gia đạo"
+            "Định" -> "Trực Định (Đại cát) • Cưới hỏi, ký hợp đồng, vào nhà mới, an cư"
+            "Chấp" -> "Trực Chấp (Cát hung) • Trồng trọt, chăn nuôi, giữ tiền của; tránh cho vay"
+            "Phá" -> "Trực Phá (Cẩn trọng) • Phá dỡ công trình cũ; tránh cưới hỏi, khai trương"
+            "Nguy" -> "Trực Nguy (Cẩn trọng) • Lễ Phật, cầu an, tích phước; tránh đi sông nước"
+            "Thành" -> "Trực Thành (Đại cát) • Trăm sự thành tựu, thi cử, khai trương, cưới gả"
+            "Thâu" -> "Trực Thâu (Cát lợi) • Thu hoạch, thu nợ, tích tài, cất giữ của cải"
+            "Khai" -> "Trực Khai (Đại cát) • Mở mang sự nghiệp, khai trương, động thổ, cưới hỏi"
+            else -> "Trực Bế (Bình an) • Đắp đập, tu bổ, tránh mở cửa hàng hoặc đi xa"
+        }
+        binding.tvResultAdvice.text = adviceStr
     }
 
     private fun setupButtons() {
@@ -184,6 +285,18 @@ class DateConverterFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
+        binding.btnPrevMonthGoodDay.setOnClickListener {
+            goodDayCalendar.add(Calendar.MONTH, -1)
+            updateGoodDayNavigator()
+            loadGoodDays()
+        }
+
+        binding.btnNextMonthGoodDay.setOnClickListener {
+            goodDayCalendar.add(Calendar.MONTH, 1)
+            updateGoodDayNavigator()
+            loadGoodDays()
+        }
+
         goodDayAdapter = GoodDayAdapter { lunarDate ->
             val intent = Intent(requireContext(), DayDetailActivity::class.java).apply {
                 putExtra("SOLAR_DAY", lunarDate.solarDay)
@@ -196,9 +309,15 @@ class DateConverterFragment : Fragment() {
         binding.rvGoodDays.adapter = goodDayAdapter
     }
 
+    private fun updateGoodDayNavigator() {
+        val m = goodDayCalendar.get(Calendar.MONTH) + 1
+        val y = goodDayCalendar.get(Calendar.YEAR)
+        binding.tvGoodDayMonthYear.text = String.format(Locale.getDefault(), "Tháng %02d - %d", m, y)
+    }
+
     private fun loadGoodDays() {
-        val month = binding.pickerSolarMonth.value
-        val year = binding.pickerSolarYear.value
+        val month = goodDayCalendar.get(Calendar.MONTH) + 1
+        val year = goodDayCalendar.get(Calendar.YEAR)
         val purposePos = binding.spinnerPurpose.selectedItemPosition
 
         val goodDays = mutableListOf<LunarCalendarEngine.LunarDate>()
@@ -243,7 +362,15 @@ class DateConverterFragment : Fragment() {
                 }
             }
         }
-        goodDayAdapter.submitList(goodDays)
+
+        if (goodDays.isEmpty()) {
+            binding.tvEmptyGoodDays.visibility = View.VISIBLE
+            binding.rvGoodDays.visibility = View.GONE
+        } else {
+            binding.tvEmptyGoodDays.visibility = View.GONE
+            binding.rvGoodDays.visibility = View.VISIBLE
+            goodDayAdapter.submitList(goodDays)
+        }
     }
 
     override fun onDestroyView() {

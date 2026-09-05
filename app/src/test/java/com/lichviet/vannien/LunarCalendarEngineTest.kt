@@ -96,5 +96,17 @@ class LunarCalendarEngineTest {
         assertEquals(22, sDay)
         assertEquals(3, sMonth)
         assertEquals(2023, sYear)
+
+        // Kiểm tra hàm xác định năm nhuận:
+        // Năm 2023 nhuận tháng 2
+        assertEquals(2, LunarCalendarEngine.getLeapMonthOfYear(2023))
+        // Năm 2020 nhuận tháng 4
+        assertEquals(4, LunarCalendarEngine.getLeapMonthOfYear(2020))
+        // Năm 2024 không có tháng nhuận
+        assertEquals(0, LunarCalendarEngine.getLeapMonthOfYear(2024))
+
+        // Kiểm tra số ngày trong tháng âm lịch (29 hoặc 30 ngày)
+        val days1 = LunarCalendarEngine.getDaysInLunarMonth(1, 2024)
+        assertTrue(days1 == 29 || days1 == 30)
     }
 }

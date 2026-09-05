@@ -3,32 +3,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#77BCA5">
+    android:background="#D1E8E2">
 
-    <!-- Header Title -->
-    <TextView
-        android:id="@+id/tv_title_convert"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/title_convert"
-        android:textColor="#1A365D"
-        android:textSize="18sp"
-        android:textStyle="bold"
+    <!-- Header Top Bar -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header_date_converter"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:background="@drawable/bg_folk_header"
+        android:paddingHorizontal="16dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Đổi Ngày &amp; Tìm Ngày Tốt"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Tab Selector (Đổi ngày | Tìm ngày tốt) -->
     <LinearLayout
         android:id="@+id/layout_tabs"
-        android:layout_width="280dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="12dp"
+        android:layout_width="290dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/bg_tab_container"
-        android:padding="2dp"
+        android:padding="3dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/tv_title_convert"
+        app:layout_constraintTop_toBottomOf="@id/header_date_converter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -65,8 +75,7 @@
         android:id="@+id/scroll_content"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/layout_tabs"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -77,7 +86,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="24dp"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="24dp"
             android:gravity="center_horizontal">
 
             <!-- Container for Tab 1: Đổi ngày -->
@@ -92,45 +102,88 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="☀  Dương Lịch"
+                    android:layout_marginTop="6dp"
+                    android:text="☀  DƯƠNG LỊCH"
                     android:textColor="#1A365D"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:textStyle="bold" />
 
                 <!-- Dương Lịch Pickers Card -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="140dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
                     app:cardCornerRadius="14dp"
                     app:cardElevation="3dp"
                     app:cardBackgroundColor="@color/white">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:gravity="center">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="8dp">
 
-                        <NumberPicker
-                            android:id="@+id/picker_solar_day"
-                            android:layout_width="0dp"
+                        <!-- Column Header Labels -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1" />
+                            android:orientation="horizontal">
 
-                        <NumberPicker
-                            android:id="@+id/picker_solar_month"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="NGÀY"
+                                android:textColor="#1B5E20"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
 
-                        <NumberPicker
-                            android:id="@+id/picker_solar_year"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1.2" />
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="THÁNG"
+                                android:textColor="#1B5E20"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
 
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1.2"
+                                android:gravity="center"
+                                android:text="NĂM"
+                                android:textColor="#1B5E20"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="130dp"
+                            android:orientation="horizontal"
+                            android:gravity="center">
+
+                            <NumberPicker
+                                android:id="@+id/picker_solar_day"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                            <NumberPicker
+                                android:id="@+id/picker_solar_month"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                            <NumberPicker
+                                android:id="@+id/picker_solar_year"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1.2" />
+                        </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -138,62 +191,234 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="☾  Âm Lịch"
+                    android:layout_marginTop="12dp"
+                    android:text="☾  ÂM LỊCH"
                     android:textColor="#1A365D"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:textStyle="bold" />
 
                 <!-- Âm Lịch Pickers Card -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="140dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
                     app:cardCornerRadius="14dp"
                     app:cardElevation="3dp"
                     app:cardBackgroundColor="@color/white">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:gravity="center">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="8dp">
 
-                        <NumberPicker
-                            android:id="@+id/picker_lunar_day"
-                            android:layout_width="0dp"
+                        <!-- Column Header Labels -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1" />
+                            android:orientation="horizontal">
 
-                        <NumberPicker
-                            android:id="@+id/picker_lunar_month"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="NGÀY"
+                                android:textColor="#B71C1C"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
 
-                        <NumberPicker
-                            android:id="@+id/picker_lunar_year"
-                            android:layout_width="0dp"
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="THÁNG"
+                                android:textColor="#B71C1C"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1.2"
+                                android:gravity="center"
+                                android:text="NĂM"
+                                android:textColor="#B71C1C"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="130dp"
+                            android:orientation="horizontal"
+                            android:gravity="center">
+
+                            <NumberPicker
+                                android:id="@+id/picker_lunar_day"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                            <NumberPicker
+                                android:id="@+id/picker_lunar_month"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                            <NumberPicker
+                                android:id="@+id/picker_lunar_year"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1.2" />
+                        </LinearLayout>
+
+                        <!-- Leap Month Toggle & Info -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1.2" />
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="8dp"
+                            android:paddingTop="4dp">
+
+                            <CheckBox
+                                android:id="@+id/cb_lunar_leap"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tháng Nhuận"
+                                android:textColor="#B71C1C"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_leap_info"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:text="(Năm nay không có tháng nhuận)"
+                                android:textColor="#666666"
+                                android:textSize="11sp"
+                                android:textStyle="italic" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Converted Date Result Summary Card -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_result_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="3dp"
+                    app:cardBackgroundColor="@color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="14dp">
+
+                        <!-- Result Title & Status Badge -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/tv_result_solar"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Thứ Bảy, 20/08/2026 Dương Lịch"
+                                android:textColor="#1A365D"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_result_badge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_today_badge"
+                                android:paddingHorizontal="8dp"
+                                android:paddingVertical="3dp"
+                                android:text="HOÀNG ĐẠO"
+                                android:textColor="#1B5E20"
+                                android:textSize="10sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tv_result_lunar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Tức Ngày 12 Tháng 8 (Năm Bính Thìn Âm Lịch)"
+                            android:textColor="#B71C1C"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginVertical="8dp"
+                            android:background="#EEEEEE" />
+
+                        <!-- Can Chi Details -->
+                        <TextView
+                            android:id="@+id/tv_result_canchi"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Can Chi: Ngày Giáp Thân • Tháng Canh Thân • Năm Bính Thìn"
+                            android:textColor="#333333"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tv_result_tiet_khi"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Tiết khí: Bạch Lộ (Nắng dịu, gió mát)"
+                            android:textColor="#555555"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tv_result_good_hours"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Giờ Hoàng Đạo: Tý, Sửu, Thìn, Tỵ, Mùi, Tuất"
+                            android:textColor="#1B5E20"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_result_advice"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Trực: Định (Đại cát) • Việc nên làm: Cưới hỏi, khai trương, vào nhà mới"
+                            android:textColor="#2E7D32"
+                            android:textSize="12sp" />
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
                 <!-- Button: Xem chi tiết ngày -->
-                <TextView
+                <Button
                     android:id="@+id/btn_view_day_detail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:layout_marginTop="14dp"
                     android:layout_marginBottom="12dp"
-                    android:background="@drawable/bg_button_rounded"
-                    android:text="@string/btn_view_day_detail"
-                    android:textColor="#4A154B"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:clickable="true"
-                    android:focusable="true" />
+                    android:backgroundTint="#1B5E20"
+                    android:text="Xem Chi Tiết Lịch Vạn Niên Của Ngày Này"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -205,20 +430,71 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
+                <!-- Month - Year Navigator Bar -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="8dp">
+
+                        <ImageView
+                            android:id="@+id/btn_prev_month_good_day"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:padding="6dp"
+                            android:src="@drawable/ic_chevron_left"
+                            android:contentDescription="Tháng trước"
+                            android:clickable="true"
+                            android:focusable="true"
+                            app:tint="#1B5E20" />
+
+                        <TextView
+                            android:id="@+id/tv_good_day_month_year"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Tháng 09 - 2026"
+                            android:textColor="#1A365D"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/btn_next_month_good_day"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:padding="6dp"
+                            android:src="@drawable/ic_chevron_right"
+                            android:contentDescription="Tháng sau"
+                            android:clickable="true"
+                            android:focusable="true"
+                            app:tint="#1B5E20" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="12dp"
                     android:text="Chọn mục đích tìm ngày tốt:"
                     android:textColor="#1A365D"
-                    android:textSize="15sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
                 <Spinner
                     android:id="@+id/spinner_purpose"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_height="46dp"
+                    android:layout_marginTop="6dp"
                     android:background="@drawable/bg_folk_card"
                     android:paddingHorizontal="12dp" />
 
@@ -226,11 +502,23 @@
                     android:id="@+id/tv_find_result_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Danh sách các ngày Hoàng Đạo trong tháng:"
+                    android:layout_marginTop="14dp"
+                    android:text="Danh sách các ngày Hoàng Đạo &amp; Cát Lành trong tháng:"
                     android:textColor="#1A365D"
                     android:textSize="14sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_empty_good_days"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:text="Không có ngày nào phù hợp toàn bộ tiêu chí khắt khe trong tháng này. Bạn hãy bấm chọn tháng kế tiếp nhé!"
+                    android:textColor="#666666"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_good_days"

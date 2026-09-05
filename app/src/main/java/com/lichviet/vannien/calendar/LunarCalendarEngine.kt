@@ -299,6 +299,33 @@ object LunarCalendarEngine {
     }
 
     /**
+     * Xác định tháng nhuận của năm âm lịch (trả về 1..12, hoặc 0 nếu năm không có tháng nhuận)
+     */
+    fun getLeapMonthOfYear(lunarYear: Int, timeZone: Double = TIMEZONE): Int {
+        val a11 = getLunarMonth11(lunarYear - 1, timeZone)
+        val b11 = getLunarMonth11(lunarYear, timeZone)
+        if (b11 - a11 > 365) {
+            val leapOff = getLeapMonthOffset(a11, timeZone)
+            var leapMonth = leapOff - 2
+            if (leapMonth <= 0) {
+                leapMonth += 12
+            }
+            return leapMonth
+        }
+        return 0
+    }
+
+    /**
+     * Tính số ngày của một tháng âm lịch (29 hoặc 30 ngày)
+     */
+    fun getDaysInLunarMonth(lunarMonth: Int, lunarYear: Int, isLeap: Boolean = false, timeZone: Double = TIMEZONE): Int {
+        val s30 = convertLunar2Solar(30, lunarMonth, lunarYear, isLeap, timeZone)
+        if (s30.first == 0) return 29
+        val checkLunar = convertSolar2Lunar(s30.first, s30.second, s30.third, timeZone)
+        return if (checkLunar.day == 30 && checkLunar.month == lunarMonth && checkLunar.isLeap == isLeap) 30 else 29
+    }
+
+    /**
      * Tính đầy đủ thông tin Âm Lịch và Phong Thủy cho một ngày Dương Lịch
      */
     fun getFullLunarDate(dd: Int, mm: Int, yy: Int): LunarDate {

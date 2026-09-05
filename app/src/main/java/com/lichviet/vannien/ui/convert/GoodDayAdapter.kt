@@ -1,11 +1,10 @@
 package com.lichviet.vannien.ui.convert
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.lichviet.vannien.calendar.LunarCalendarEngine
+import com.lichviet.vannien.databinding.ItemGoodDayBinding
 
 class GoodDayAdapter(
     private val onDayClick: (LunarCalendarEngine.LunarDate) -> Unit
@@ -20,8 +19,8 @@ class GoodDayAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GoodDayViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(android.R.layout.simple_list_item_2, parent, false)
-        return GoodDayViewHolder(view)
+        val binding = ItemGoodDayBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return GoodDayViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: GoodDayViewHolder, position: Int) {
@@ -30,20 +29,24 @@ class GoodDayAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    inner class GoodDayViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val text1: TextView = itemView.findViewById(android.R.id.text1)
-        private val text2: TextView = itemView.findViewById(android.R.id.text2)
+    inner class GoodDayViewHolder(private val binding: ItemGoodDayBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: LunarCalendarEngine.LunarDate) {
-            text1.text = "${item.dayOfWeek}, ${item.solarDay}/${item.solarMonth}/${item.solarYear} (Hoàng Đạo)"
-            text1.setTextColor(android.graphics.Color.parseColor("#1B5E20"))
-            text1.setTypeface(null, android.graphics.Typeface.BOLD)
+            binding.tvItemSolarDay.text = item.solarDay.toString()
+            binding.tvItemDayOfWeek.text = item.dayOfWeek
 
             val monthText = if (item.isLeap) "Tháng ${item.month} (Nhuận)" else "Tháng ${item.month}"
-            text2.text = "Âm lịch: Ngày ${item.day} $monthText - Trực: ${item.truc} - Tiết: ${item.tietKhi}"
-            text2.setTextColor(android.graphics.Color.parseColor("#555555"))
+            binding.tvItemLunarDate.text = "Âm lịch: Ngày ${item.day} $monthText (${item.canChiYear})"
+            binding.tvItemCanchiDay.text = "Ngày ${item.canChiDay} • Trực: ${item.truc} • Tiết: ${item.tietKhi}"
 
-            itemView.setOnClickListener { onDayClick(item) }
+            val hoursDisplay = if (item.hoangDaoHours.isNotEmpty()) {
+                "Giờ đẹp: " + item.hoangDaoHours.take(4).joinToString(", ") { it.name.split(" ").firstOrNull() ?: it.name }
+            } else {
+                "Giờ Hoàng Đạo trong ngày"
+            }
+            binding.tvItemGoodHours.text = hoursDisplay
+
+            binding.root.setOnClickListener { onDayClick(item) }
         }
     }
 }
