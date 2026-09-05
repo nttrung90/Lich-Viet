@@ -112,68 +112,93 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <!-- Weekday Header (T2 -> CN) -->
+            <!-- Weekday Header (T2 -> CN) with Grid Lines -->
             <LinearLayout
                 android:id="@+id/layout_weekdays"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
-                android:background="#F0F7F4"
+                android:background="#F4F8F6"
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="T2"
-                    android:textColor="#2E7D32"
+                    android:textColor="#1B5E20"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#E2E8F0" />
+
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="T3"
-                    android:textColor="#2E7D32"
+                    android:textColor="#1B5E20"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#E2E8F0" />
+
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="T4"
-                    android:textColor="#2E7D32"
+                    android:textColor="#1B5E20"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#E2E8F0" />
+
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="T5"
-                    android:textColor="#2E7D32"
+                    android:textColor="#1B5E20"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#E2E8F0" />
+
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="T6"
-                    android:textColor="#2E7D32"
+                    android:textColor="#1B5E20"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#E2E8F0" />
+
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="T7"
@@ -181,9 +206,14 @@
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#E2E8F0" />
+
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="CN"
@@ -195,15 +225,15 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#E2E8F0" />
+                android:layout_height="1.5dp"
+                android:background="#CBD5E1" />
 
             <!-- Grid Calendar Days -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_calendar_grid"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="4dp"
+                android:padding="0dp"
                 android:clipToPadding="false" />
 
         </LinearLayout>

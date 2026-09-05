@@ -8,9 +8,11 @@ import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.lichviet.vannien.R
 import com.lichviet.vannien.calendar.LunarCalendarEngine
 import com.lichviet.vannien.data.HolidayRepository
@@ -53,34 +55,103 @@ class MonthCalendarFragment : Fragment() {
                 selectedDayModel = dayModel
                 updateSummaryCard(dayModel)
             } else {
-                // Chuyển sang tháng của ngày vừa chọn
+                // Chuyển sang tháng của ngày vừa chọn với hiệu ứng trượt mượt mà
+                val currentYear = displayCalendar.get(Calendar.YEAR)
+                val currentMonth = displayCalendar.get(Calendar.MONTH) + 1
+                val isNext = (dayModel.solarYear > currentYear) ||
+                        (dayModel.solarYear == currentYear && dayModel.solarMonth > currentMonth)
+
                 displayCalendar.set(Calendar.YEAR, dayModel.solarYear)
                 displayCalendar.set(Calendar.MONTH, dayModel.solarMonth - 1)
                 displayCalendar.set(Calendar.DAY_OF_MONTH, dayModel.solarDay)
-                loadMonthData(dayModel.solarDay)
+                animateMonthChange(toNext = isNext, preferredDay = dayModel.solarDay)
             }
         }
         binding.rvCalendarGrid.layoutManager = GridLayoutManager(requireContext(), 7)
+        if (binding.rvCalendarGrid.itemDecorationCount == 0) {
+            binding.rvCalendarGrid.addItemDecoration(CalendarGridDividerDecoration())
+        }
+        binding.rvCalendarGrid.isNestedScrollingEnabled = false
         binding.rvCalendarGrid.adapter = adapter
     }
 
+    private var isAnimating = false
+
+    /**
+     * Vuốt sang trái (hoặc bấm mũi tên phải) -> Đến tháng kế tiếp
+     */
+    private fun goToNextMonthWithAnim() {
+        animateMonthChange(toNext = true)
+    }
+
+    /**
+     * Vuốt sang phải (hoặc bấm mũi tên trái) -> Chuyển về tháng trước
+     */
+    private fun goToPreviousMonthWithAnim() {
+        animateMonthChange(toNext = false)
+    }
+
+    private fun animateMonthChange(toNext: Boolean, preferredDay: Int? = null) {
+        if (isAnimating) return
+        isAnimating = true
+
+        val width = binding.rvCalendarGrid.width.toFloat()
+        val travelDistance = if (width > 0) width * 0.25f else 250f
+        val exitTranslation = if (toNext) -travelDistance else travelDistance
+        val enterTranslation = if (toNext) travelDistance else -travelDistance
+
+        binding.rvCalendarGrid.animate()
+            .translationX(exitTranslation)
+            .alpha(0.15f)
+            .setDuration(120)
+            .withEndAction {
+                if (preferredDay == null) {
+                    displayCalendar.add(Calendar.MONTH, if (toNext) 1 else -1)
+                }
+                loadMonthData(preferredDay)
+                binding.rvCalendarGrid.translationX = enterTranslation
+                binding.rvCalendarGrid.animate()
+                    .translationX(0f)
+                    .alpha(1f)
+                    .setDuration(150)
+                    .withEndAction {
+                        isAnimating = false
+                    }
+                    .start()
+            }
+            .start()
+    }
+
     private fun setupListeners() {
-        // Tháng trước
+        // Tháng trước -> chuyển về tháng trước
         binding.btnPrevMonth.setOnClickListener {
-            displayCalendar.add(Calendar.MONTH, -1)
-            loadMonthData()
+            goToPreviousMonthWithAnim()
         }
 
-        // Tháng sau
+        // Tháng sau -> đến tháng kế tiếp
         binding.btnNextMonth.setOnClickListener {
-            displayCalendar.add(Calendar.MONTH, 1)
-            loadMonthData()
+            goToNextMonthWithAnim()
         }
 
         // Nút "Hôm Nay" -> quay về tháng hiện tại và chọn ngày hôm nay
         binding.btnMonthToday.setOnClickListener {
+            val now = Calendar.getInstance()
+            val isDiff = displayCalendar.get(Calendar.YEAR) != now.get(Calendar.YEAR) ||
+                    displayCalendar.get(Calendar.MONTH) != now.get(Calendar.MONTH)
+
             displayCalendar.timeInMillis = System.currentTimeMillis()
-            loadMonthData(Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
+            if (isDiff) {
+                binding.rvCalendarGrid.animate()
+                    .alpha(0.2f)
+                    .setDuration(100)
+                    .withEndAction {
+                        loadMonthData(now.get(Calendar.DAY_OF_MONTH))
+                        binding.rvCalendarGrid.animate().alpha(1f).setDuration(120).start()
+                    }
+                    .start()
+            } else {
+                loadMonthData(now.get(Calendar.DAY_OF_MONTH))
+            }
         }
 
         // Bấm vào tiêu đề "Tháng MM - YYYY" -> mở bộ chọn ngày tháng nhanh
@@ -115,9 +186,18 @@ class MonthCalendarFragment : Fragment() {
     }
 
     private fun setupSwipeGesture() {
+        val touchSlop = ViewConfiguration.get(requireContext()).scaledTouchSlop
+        val density = resources.displayMetrics.density
+        var startX = 0f
+        var startY = 0f
+        var isHorizontalSwipe = false
+        var hasHandledSwipe = false
+
         val gestureDetector = GestureDetector(requireContext(), object : GestureDetector.SimpleOnGestureListener() {
-            private val SWIPE_THRESHOLD = 80
-            private val SWIPE_VELOCITY_THRESHOLD = 80
+            private val SWIPE_THRESHOLD = 40 * density
+            private val SWIPE_VELOCITY_THRESHOLD = 80 * density
+
+            override fun onDown(e: MotionEvent): Boolean = true
 
             override fun onFling(
                 e1: MotionEvent?,
@@ -128,16 +208,15 @@ class MonthCalendarFragment : Fragment() {
                 if (e1 == null) return false
                 val diffX = e2.x - e1.x
                 val diffY = e2.y - e1.y
-                if (abs(diffX) > abs(diffY)) {
-                    if (abs(diffX) > SWIPE_THRESHOLD && abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                if (abs(diffX) > abs(diffY) && abs(diffX) > SWIPE_THRESHOLD && abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (!hasHandledSwipe) {
+                        hasHandledSwipe = true
                         if (diffX > 0) {
-                            // Vuốt sang phải -> Tháng trước
-                            displayCalendar.add(Calendar.MONTH, -1)
-                            loadMonthData()
+                            // Vuốt sang phải -> Chuyển về tháng trước
+                            goToPreviousMonthWithAnim()
                         } else {
-                            // Vuốt sang trái -> Tháng sau
-                            displayCalendar.add(Calendar.MONTH, 1)
-                            loadMonthData()
+                            // Vuốt sang trái -> Đến tháng kế tiếp
+                            goToNextMonthWithAnim()
                         }
                         return true
                     }
@@ -146,10 +225,95 @@ class MonthCalendarFragment : Fragment() {
             }
         })
 
-        binding.rvCalendarGrid.setOnTouchListener { _, event ->
+        // Lắng nghe thao tác chạm và vuốt trực tiếp trên RecyclerView
+        binding.rvCalendarGrid.addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
+            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                gestureDetector.onTouchEvent(e)
+                when (e.actionMasked) {
+                    MotionEvent.ACTION_DOWN -> {
+                        startX = e.x
+                        startY = e.y
+                        isHorizontalSwipe = false
+                        hasHandledSwipe = false
+                    }
+                    MotionEvent.ACTION_MOVE -> {
+                        val dx = e.x - startX
+                        val dy = e.y - startY
+                        // Khi người dùng bắt đầu vuốt ngang, chặn itemView con để không kích hoạt click nhầm
+                        if (abs(dx) > touchSlop && abs(dx) > abs(dy) * 1.2f) {
+                            isHorizontalSwipe = true
+                            return true
+                        }
+                    }
+                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                        if (isHorizontalSwipe && !hasHandledSwipe) {
+                            val dx = e.x - startX
+                            if (abs(dx) > 50 * density) {
+                                hasHandledSwipe = true
+                                if (dx > 0) {
+                                    // Vuốt sang phải -> Chuyển về tháng trước
+                                    goToPreviousMonthWithAnim()
+                                } else {
+                                    // Vuốt sang trái -> Đến tháng kế tiếp
+                                    goToNextMonthWithAnim()
+                                }
+                            }
+                        }
+                        isHorizontalSwipe = false
+                    }
+                }
+                return isHorizontalSwipe
+            }
+
+            override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
+                gestureDetector.onTouchEvent(e)
+                when (e.actionMasked) {
+                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                        if (isHorizontalSwipe && !hasHandledSwipe) {
+                            val dx = e.x - startX
+                            if (abs(dx) > 50 * density) {
+                                hasHandledSwipe = true
+                                if (dx > 0) {
+                                    // Vuốt sang phải -> Chuyển về tháng trước
+                                    goToPreviousMonthWithAnim()
+                                } else {
+                                    // Vuốt sang trái -> Đến tháng kế tiếp
+                                    goToNextMonthWithAnim()
+                                }
+                            }
+                        }
+                        isHorizontalSwipe = false
+                    }
+                }
+            }
+
+            override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
+        })
+
+        // Cho phép vuốt trên cả thanh thứ trong tuần (layoutWeekdays)
+        val headerTouchListener = View.OnTouchListener { _, event ->
             gestureDetector.onTouchEvent(event)
-            false
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    startX = event.x
+                    startY = event.y
+                    hasHandledSwipe = false
+                    true
+                }
+                MotionEvent.ACTION_UP -> {
+                    if (!hasHandledSwipe) {
+                        val dx = event.x - startX
+                        if (abs(dx) > 50 * density) {
+                            hasHandledSwipe = true
+                            if (dx > 0) goToPreviousMonthWithAnim() else goToNextMonthWithAnim()
+                        }
+                    }
+                    true
+                }
+                else -> false
+            }
         }
+        binding.layoutWeekdays.setOnTouchListener(headerTouchListener)
     }
 
     fun loadMonthData(preferredDay: Int? = null) {
@@ -274,6 +438,7 @@ class MonthCalendarFragment : Fragment() {
         }
 
         adapter.submitList(dayList, selectedDayModel)
+        binding.rvCalendarGrid.post { adapter.notifyDataSetChanged() }
         selectedDayModel?.let { updateSummaryCard(it) }
     }
 

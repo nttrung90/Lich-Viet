@@ -56,6 +56,17 @@ class MonthCalendarAdapter(
         val isSelected = selectedDay?.let {
             it.solarDay == item.solarDay && it.solarMonth == item.solarMonth && it.solarYear == item.solarYear
         } ?: false
+
+        // Tự động căn chỉnh chiều cao ô để khớp khít chiều cao bảng lịch (5 hoặc 6 hàng)
+        val parent = holder.itemView.parent as? ViewGroup
+        if (parent != null && parent.height > 0) {
+            val totalRows = if (days.size > 35) 6 else 5
+            val targetHeight = parent.height / totalRows
+            if (holder.itemView.layoutParams.height != targetHeight) {
+                holder.itemView.layoutParams.height = targetHeight
+            }
+        }
+
         holder.bind(item, isSelected)
     }
 
@@ -71,12 +82,12 @@ class MonthCalendarAdapter(
             tvLunar.text = if (day.lunarDay == 1) "${day.lunarDay}/${day.lunarMonth}" else day.lunarDay.toString()
 
             if (!day.isCurrentMonth) {
-                // Ngày thuộc tháng trước hoặc tháng sau
+                // Ngày thuộc tháng trước hoặc tháng sau (ô màu xám nhạt kẻ ô)
                 tvSolar.setTextColor(Color.parseColor("#A0AEC0"))
                 tvLunar.setTextColor(Color.parseColor("#CBD5E0"))
                 tvLunar.setTypeface(null, Typeface.NORMAL)
                 dot.visibility = View.INVISIBLE
-                itemView.setBackgroundColor(Color.TRANSPARENT)
+                itemView.setBackgroundResource(R.drawable.bg_cell_other_month)
             } else {
                 // Ngày trong tháng hiện tại
                 if (isSelected && day.isToday) {
@@ -92,7 +103,7 @@ class MonthCalendarAdapter(
                     tvSolar.setTextColor(Color.parseColor("#E65100"))
                     tvLunar.setTextColor(Color.parseColor("#F57C00"))
                 } else {
-                    itemView.setBackgroundColor(Color.TRANSPARENT)
+                    itemView.setBackgroundResource(R.drawable.bg_cell_normal)
                     // Màu ngày dương lịch theo thứ trong tuần
                     if (day.isSunday) {
                         tvSolar.setTextColor(Color.parseColor("#D32F2F"))
