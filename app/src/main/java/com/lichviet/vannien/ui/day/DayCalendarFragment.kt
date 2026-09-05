@@ -125,6 +125,8 @@ class DayCalendarFragment : Fragment() {
             private val SWIPE_THRESHOLD = 80
             private val SWIPE_VELOCITY_THRESHOLD = 80
 
+            override fun onDown(e: MotionEvent): Boolean = true
+
             override fun onFling(
                 e1: MotionEvent?,
                 e2: MotionEvent,
@@ -157,7 +159,7 @@ class DayCalendarFragment : Fragment() {
             if (!handled && event.action == MotionEvent.ACTION_UP) {
                 v.performClick()
             }
-            handled
+            true
         }
     }
 

@@ -1,4 +1,4 @@
-﻿package com.lichviet.vannien.ui.convert
+package com.lichviet.vannien.ui.convert
 
 import android.content.Intent
 import android.graphics.Color
@@ -202,15 +202,16 @@ class DateConverterFragment : Fragment() {
             solarRes = LunarCalendarEngine.convertLunar2Solar(lDay, lMonth, lYear, false)
         }
 
-        binding.pickerSolarMonth.value = solarRes.second
-        binding.pickerSolarYear.value = solarRes.third
-        adjustSolarDaysRange()
-        binding.pickerSolarDay.value = solarRes.first.coerceAtMost(binding.pickerSolarDay.maxValue)
-        adjustLunarDaysRange(lMonth, lYear, isLeap)
-        updateLeapMonthUI(lMonth, lYear, isLeap)
+        if (solarRes.first > 0 && solarRes.second > 0 && solarRes.third > 0) {
+            binding.pickerSolarMonth.value = solarRes.second
+            binding.pickerSolarYear.value = solarRes.third
+            adjustSolarDaysRange()
+            binding.pickerSolarDay.value = solarRes.first.coerceIn(binding.pickerSolarDay.minValue, binding.pickerSolarDay.maxValue)
+            adjustLunarDaysRange(lMonth, lYear, isLeap)
+            updateLeapMonthUI(lMonth, lYear, isLeap)
+            updateResultCard(binding.pickerSolarDay.value, solarRes.second, solarRes.third)
+        }
         isUpdatingPickers = false
-
-        updateResultCard(binding.pickerSolarDay.value, solarRes.second, solarRes.third)
     }
 
     private fun updateResultCard(sDay: Int, sMonth: Int, sYear: Int) {

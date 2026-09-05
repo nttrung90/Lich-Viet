@@ -1,5 +1,8 @@
 package com.lichviet.vannien.data
 
+import com.lichviet.vannien.calendar.LunarCalendarEngine
+import java.util.Calendar
+
 /**
  * Kho dữ liệu ngày lễ truyền thống và Văn khấn cổ truyền Việt Nam
  */
@@ -48,12 +51,38 @@ object HolidayRepository {
         Holiday("Tất Niên Đêm 30 Tết", true, 30, 12, "Lễ trừ tịch cúng tất niên, tiễn năm cũ, nghinh đón tân xuân")
     )
 
-    fun getHoliday(solarDay: Int, solarMonth: Int, lunarDay: Int, lunarMonth: Int): String? {
-        val solarHoliday = holidays.find { !it.isLunar && it.day == solarDay && it.month == solarMonth }
-        if (solarHoliday != null) return solarHoliday.name
+    fun getHoliday(solarDay: Int, solarMonth: Int, lunarDay: Int, lunarMonth: Int, solarYear: Int = 0): String? {
+        val matched = mutableListOf<String>()
 
-        val lunarHoliday = holidays.find { it.isLunar && it.day == lunarDay && it.month == lunarMonth }
-        if (lunarHoliday != null) return lunarHoliday.name
+        holidays.filter { !it.isLunar && it.day == solarDay && it.month == solarMonth }
+            .forEach { matched.add(it.name) }
+
+        holidays.filter { it.isLunar && it.day == lunarDay && it.month == lunarMonth && it.day != 30 }
+            .forEach { matched.add(it.name) }
+
+        // Kiểm tra Tất Niên (ngày cuối cùng của năm âm lịch: 30 Tết hoặc 29 Tết nếu tháng Chạp thiếu)
+        if (lunarMonth == 12) {
+            if (lunarDay == 30) {
+                matched.add("Tất Niên Đêm 30 Tết")
+            } else if (lunarDay == 29 && solarYear > 0) {
+                val nextCal = Calendar.getInstance().apply {
+                    set(solarYear, solarMonth - 1, solarDay)
+                    add(Calendar.DAY_OF_MONTH, 1)
+                }
+                val tomorrowLunar = LunarCalendarEngine.convertSolar2Lunar(
+                    nextCal.get(Calendar.DAY_OF_MONTH),
+                    nextCal.get(Calendar.MONTH) + 1,
+                    nextCal.get(Calendar.YEAR)
+                )
+                if (tomorrowLunar.day == 1 && tomorrowLunar.month == 1) {
+                    matched.add("Tất Niên (Giao Thừa 29 Tết)")
+                }
+            }
+        }
+
+        if (matched.isNotEmpty()) {
+            return matched.joinToString(" • ")
+        }
 
         if (lunarDay == 1) return "Mùng Một Đầu Tháng (Sóc)"
         if (lunarDay == 15) return "Ngày Rằm Trăng Tròn (Vọng)"

@@ -184,9 +184,9 @@ object HoroscopeEngine {
         }
 
         val rawQuaiSo = if (isMale) {
-            (11 - sum) % 9.let { if (it == 0) 9 else it }
+            ((11 - sum) % 9).let { if (it == 0) 9 else it }
         } else {
-            (sum + 4) % 9.let { if (it == 0) 9 else it }
+            ((sum + 4) % 9).let { if (it == 0) 9 else it }
         }
 
         // Quy tắc phong thủy: "Ngũ vi trung cung"

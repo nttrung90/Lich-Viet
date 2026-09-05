@@ -109,4 +109,30 @@ class LunarCalendarEngineTest {
         val days1 = LunarCalendarEngine.getDaysInLunarMonth(1, 2024)
         assertTrue(days1 == 29 || days1 == 30)
     }
+
+    @Test
+    fun testBatTrachModuloZeroEdgeCases() {
+        // Nam 1991: 1+9+9+1 = 20 -> 2. 11 - 2 = 9. (11 - sum) % 9 == 0 -> quaiSo phải là 9 (Ly - Hỏa)
+        val male1991 = HoroscopeEngine.getBatTrach(1991, true)
+        assertEquals(9, male1991.quaiSo)
+        assertEquals("Ly (Hỏa)", male1991.cungMenh)
+
+        // Nữ 1994: 1+9+9+4 = 23 -> 5. 5 + 4 = 9. (sum + 4) % 9 == 0 -> quaiSo phải là 9 (Ly - Hỏa)
+        val female1994 = HoroscopeEngine.getBatTrach(1994, false)
+        assertEquals(9, female1994.quaiSo)
+        assertEquals("Ly (Hỏa)", female1994.cungMenh)
+    }
+
+    @Test
+    fun testHolidayMatching() {
+        // 1/1 Dương lịch
+        val h1 = com.lichviet.vannien.data.HolidayRepository.getHoliday(1, 1, 20, 11, 2024)
+        assertNotNull(h1)
+        assertTrue(h1!!.contains("Tết Dương Lịch"))
+
+        // Rằm tháng Giêng (15/1 Âm lịch)
+        val h2 = com.lichviet.vannien.data.HolidayRepository.getHoliday(24, 2, 15, 1, 2024)
+        assertNotNull(h2)
+        assertTrue(h2!!.contains("Rằm tháng Giêng"))
+    }
 }

@@ -32,7 +32,8 @@
         <activity
             android:name=".ui.weather.WeatherActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LichViet.Weather" />
 
         <activity
             android:name=".ui.horoscope.HoroscopeDetailActivity"

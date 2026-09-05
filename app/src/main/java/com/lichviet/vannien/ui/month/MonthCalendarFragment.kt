@@ -343,24 +343,25 @@ class MonthCalendarFragment : Fragment() {
             val d = daysInPrevMonth - i
             val mPrev = prevCal.get(Calendar.MONTH) + 1
             val yPrev = prevCal.get(Calendar.YEAR)
-            val (ld, lm) = LunarCalendarEngine.convertSolar2Lunar(d, mPrev, yPrev)
+            val lunarRes = LunarCalendarEngine.convertSolar2Lunar(d, mPrev, yPrev)
             prevCal.set(Calendar.DAY_OF_MONTH, d)
             val dow = prevCal.get(Calendar.DAY_OF_WEEK)
-            val holiday = HolidayRepository.getHoliday(d, mPrev, ld, lm)
+            val holiday = HolidayRepository.getHoliday(d, mPrev, lunarRes.day, lunarRes.month, yPrev)
 
             dayList.add(
                 CalendarDayModel(
                     solarDay = d,
                     solarMonth = mPrev,
                     solarYear = yPrev,
-                    lunarDay = ld,
-                    lunarMonth = lm,
+                    lunarDay = lunarRes.day,
+                    lunarMonth = lunarRes.month,
                     dayOfWeek = dow,
                     isCurrentMonth = false,
                     isToday = false,
                     isHoangDao = false,
                     isSpecial = false,
-                    holidayName = holiday
+                    holidayName = holiday,
+                    isLeapMonth = lunarRes.isLeap
                 )
             )
         }
@@ -373,26 +374,27 @@ class MonthCalendarFragment : Fragment() {
         var matchedSelectedModel: CalendarDayModel? = null
 
         for (d in 1..daysInMonth) {
-            val (ld, lm) = LunarCalendarEngine.convertSolar2Lunar(d, month, year)
+            val lunarRes = LunarCalendarEngine.convertSolar2Lunar(d, month, year)
             val fullDate = LunarCalendarEngine.getFullLunarDate(d, month, year)
             cal.set(Calendar.DAY_OF_MONTH, d)
             val dow = cal.get(Calendar.DAY_OF_WEEK)
             val isToday = isThisMonthAndYear && (d == todayDate)
-            val holiday = HolidayRepository.getHoliday(d, month, ld, lm)
-            val isSpecial = (ld == 1 || ld == 15 || !holiday.isNullOrEmpty())
+            val holiday = HolidayRepository.getHoliday(d, month, lunarRes.day, lunarRes.month, year)
+            val isSpecial = (lunarRes.day == 1 || lunarRes.day == 15 || !holiday.isNullOrEmpty())
 
             val model = CalendarDayModel(
                 solarDay = d,
                 solarMonth = month,
                 solarYear = year,
-                lunarDay = ld,
-                lunarMonth = lm,
+                lunarDay = lunarRes.day,
+                lunarMonth = lunarRes.month,
                 dayOfWeek = dow,
                 isCurrentMonth = true,
                 isToday = isToday,
                 isHoangDao = fullDate.isHoangDao,
                 isSpecial = isSpecial,
-                holidayName = holiday
+                holidayName = holiday,
+                isLeapMonth = lunarRes.isLeap
             )
             dayList.add(model)
 
@@ -415,30 +417,30 @@ class MonthCalendarFragment : Fragment() {
         for (d in 1..nextMonthPadding) {
             val mNext = nextCal.get(Calendar.MONTH) + 1
             val yNext = nextCal.get(Calendar.YEAR)
-            val (ld, lm) = LunarCalendarEngine.convertSolar2Lunar(d, mNext, yNext)
+            val lunarRes = LunarCalendarEngine.convertSolar2Lunar(d, mNext, yNext)
             nextCal.set(Calendar.DAY_OF_MONTH, d)
             val dow = nextCal.get(Calendar.DAY_OF_WEEK)
-            val holiday = HolidayRepository.getHoliday(d, mNext, ld, lm)
+            val holiday = HolidayRepository.getHoliday(d, mNext, lunarRes.day, lunarRes.month, yNext)
 
             dayList.add(
                 CalendarDayModel(
                     solarDay = d,
                     solarMonth = mNext,
                     solarYear = yNext,
-                    lunarDay = ld,
-                    lunarMonth = lm,
+                    lunarDay = lunarRes.day,
+                    lunarMonth = lunarRes.month,
                     dayOfWeek = dow,
                     isCurrentMonth = false,
                     isToday = false,
                     isHoangDao = false,
                     isSpecial = false,
-                    holidayName = holiday
+                    holidayName = holiday,
+                    isLeapMonth = lunarRes.isLeap
                 )
             )
         }
 
         adapter.submitList(dayList, selectedDayModel)
-        binding.rvCalendarGrid.post { adapter.notifyDataSetChanged() }
         selectedDayModel?.let { updateSummaryCard(it) }
     }
 
@@ -478,7 +480,7 @@ class MonthCalendarFragment : Fragment() {
         )
 
         // 4. Ngày lễ (nếu có)
-        val holiday = HolidayRepository.getHoliday(model.solarDay, model.solarMonth, full.day, full.month)
+        val holiday = HolidayRepository.getHoliday(model.solarDay, model.solarMonth, full.day, full.month, model.solarYear)
         if (!holiday.isNullOrEmpty()) {
             binding.tvSummaryHoliday.visibility = View.VISIBLE
             binding.tvSummaryHoliday.text = "🏮 $holiday"

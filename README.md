@@ -1,14 +1,26 @@
-# Lịch Việt (Vạn Niên) - Phiên bản v1.2.0
+# Lịch Việt (Vạn Niên) - Phiên bản v1.2.1
 
 Ứng dụng **Lịch Việt (Vạn Niên)** được thiết kế và phát triển chuyên sâu cho hệ điều hành Android, hỗ trợ các thiết bị từ **Android 8.0 (API 26) trở lên**. Ứng dụng mang phong cách nghệ thuật dân gian Việt Nam truyền thống, tích hợp thuật toán thiên văn học chuẩn xác tuyệt đối của **TS. Hồ Ngọc Đức (Viện Tin học, Đại học Leipzig)** theo múi giờ Việt Nam (UTC+7).
 
-### 🌟 Tính Năng Mới Trong Bản v1.2.0:
-- **Bộ Sưu Tập 33 Kiệt Tác Tranh Dân Gian Việt Nam**: Mở rộng từ 23 lên 33 bức tranh dân gian danh tiếng (Đông Hồ, Hàng Trống, Kim Hoàng), gồm: *Vinh Quy Bái Tổ, Phù Đổng Thiên Vương, Ngũ Hổ Trấn Phương, Tứ Bình Tố Nữ, Bịt Mắt Bắt Dê, Thúy Kiều Gặp Kim Trọng, Bà Chúa Thượng Ngàn, Lợn Độc Kim Hoàng, Nghỉ Ngơi Dưới Gốc Đa, Bạch Hổ Uy Linh...*
+### 🌟 Cập Nhật & Sửa Lỗi Trong Bản v1.2.1:
+- **Khắc phục lỗi Bát Trạch Phong Thủy**: Sửa lỗi toán tử ưu tiên khiến quái số phong thủy rơi vào giá trị 0 ở một số năm sinh (như 1991, 1994, 2000...).
+- **Ổn định xoay màn hình**: Khắc phục lỗi crash `IllegalStateException: Fragment already added` khi xoay màn hình trên `MainActivity`.
+- **An toàn chuyển đổi ngày Âm - Dương**: Khắc phục lỗi crash `NumberPicker` khi ngày âm lịch đầu vào không hợp lệ.
+- **Cải tiến Lễ Tết & Tất Niên**: Hỗ trợ hiển thị gộp nhiều ngày lễ khi trùng nhau; xử lý Tất Niên đêm giao thừa cho tháng Chạp thiếu (29 ngày).
+- **Sửa cử chỉ vuốt chuyển ngày**: Kích hoạt nhận diện vuốt mượt mà trên tờ lịch ngày (`DayCalendarFragment`).
+- **Tối ưu hóa hiệu suất**:
+  - Nâng cấp danh sách ngày tốt sang `ListAdapter` + `DiffUtil`.
+  - Giảm thiểu rebind ô lịch tháng bằng `notifyItemChanged()` thay vì `notifyDataSetChanged()`.
+  - Tái sử dụng adapter và layout manager cho màn hình chi tiết ngày và thời tiết.
+- **Hoàn thiện giao diện**: Đồng bộ theme và màu header trên tất cả các tab chức năng; sửa hướng mũi tên nhiệt độ min/max.
+
+### 🌟 Tính Năng Bản v1.2.0:
+- **Bộ Sưu Tập 33 Kiệt Tác Tranh Dân Gian Việt Nam**: Mở rộng từ 23 lên 33 bức tranh dân gian danh tiếng (Đông Hồ, Hàng Trống, Kim Hoàng).
 - **Trình Thưởng Thức Mỹ Thuật Dân Gian**: Hộp thoại chiêm ngưỡng toàn bộ 33 tác phẩm kèm tên tranh, dòng tranh xuất xứ, số thứ tự và lời giải nghĩa phong tục sâu sắc.
-- **Hoàn Thiện Tuyển Tập 9 Bài Văn Khấn Cổ Truyền**: Chuẩn phong tục nghi lễ Việt Nam (Mùng 1 & Rằm, Thần Tài - Thổ Địa, Giao Thừa trong nhà & ngoài trời, Mùng 1 Tết, Khai Trương, Động Thổ, Nhập Trạch, Tiễn Táo Quân 23 tháng Chạp, Lễ Vu Lan). Có bộ lọc chọn bài khấn thông minh.
-- **Nâng Cấp Thước Lỗ Ban & Phong Thủy Bát Trạch**: Bổ sung cẩm nang 3 loại thước (52.2cm, 42.9cm, 38.8cm) và Bảng Kích Thước Vàng phong thủy (cửa chính, cửa phòng, ban công, bàn thờ đứng).
+- **Hoàn Thiện Tuyển Tập 9 Bài Văn Khấn Cổ Truyền**: Chuẩn phong tục nghi lễ Việt Nam.
+- **Nâng Cấp Thước Lỗ Ban & Phong Thủy Bát Trạch**: Bổ sung cẩm nang 3 loại thước và Bảng Kích Thước Vàng phong thủy.
 - **Lịch Ngày Lễ Truyền Thống Trong Năm**: Tra cứu chi tiết toàn bộ các ngày lễ Tết Âm lịch dân gian và các ngày lễ kỷ niệm Dương lịch của Việt Nam.
-- **Cài Đặt Nhắc Nhở Thông Minh**: Hộp thoại tùy chọn đa năng lưu trữ SharedPreferences cho ngày Sóc (Mùng 1), Vọng (Rằm 15), ngày lễ lớn và tự động đổi tranh dân gian trang chủ mỗi ngày.
+- **Cài Đặt Nhắc Nhở Thông Minh**: Hộp thoại tùy chọn đa năng lưu trữ SharedPreferences cho ngày Sóc, Vọng và tự động đổi tranh dân gian.
 - **Đồng Bộ Giao Diện & Màu Nền**: Tối ưu màu nền `#D1E8E2` đồng nhất trên toàn bộ các tab chức năng.
 
 ---

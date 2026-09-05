@@ -13,11 +13,15 @@ class DayDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDayDetailBinding
     private val currentCalendar = Calendar.getInstance()
+    private val hoangDaoAdapter = HoangDaoHourAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDayDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.rvHoangDaoHours.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvHoangDaoHours.adapter = hoangDaoAdapter
 
         val sDay = intent.getIntExtra("SOLAR_DAY", currentCalendar.get(Calendar.DAY_OF_MONTH))
         val sMonth = intent.getIntExtra("SOLAR_MONTH", currentCalendar.get(Calendar.MONTH) + 1)
@@ -78,12 +82,11 @@ class DayDetailActivity : AppCompatActivity() {
         binding.tvDetailCanchiYear.text = lunarDate.canChiYear
 
         // Sự kiện
-        val holiday = HolidayRepository.getHoliday(day, month, lunarDate.day, lunarDate.month)
+        val holiday = HolidayRepository.getHoliday(day, month, lunarDate.day, lunarDate.month, year)
         binding.tvDetailEvents.text = holiday ?: "Không có sự kiện đặc biệt trong ngày này."
 
         // Giờ Hoàng Đạo
-        binding.rvHoangDaoHours.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.rvHoangDaoHours.adapter = HoangDaoHourAdapter(lunarDate.hoangDaoHours)
+        hoangDaoAdapter.updateData(lunarDate.hoangDaoHours)
 
         // Hướng xuất hành
         binding.tvHyThan.text = "- Hỷ Thần: ${lunarDate.hyThan}"

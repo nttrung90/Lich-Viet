@@ -15,11 +15,13 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val dayCalendarFragment by lazy { DayCalendarFragment() }
-    private val monthCalendarFragment by lazy { MonthCalendarFragment() }
-    private val dateConverterFragment by lazy { DateConverterFragment() }
-    private val horoscopeFragment by lazy { HoroscopeFragment() }
-    private val moreFragment by lazy { MoreFragment() }
+    companion object {
+        private const val TAG_DAY = "tag_day"
+        private const val TAG_MONTH = "tag_month"
+        private const val TAG_CONVERT = "tag_convert"
+        private const val TAG_HOROSCOPE = "tag_horoscope"
+        private const val TAG_MORE = "tag_more"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +32,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             // Mở tab Lịch Ngày đầu tiên
-            loadFragment(dayCalendarFragment)
+            loadFragment(TAG_DAY) { DayCalendarFragment() }
         }
     }
 
@@ -38,23 +40,23 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_day -> {
-                    loadFragment(dayCalendarFragment)
+                    loadFragment(TAG_DAY) { DayCalendarFragment() }
                     true
                 }
                 R.id.navigation_month -> {
-                    loadFragment(monthCalendarFragment)
+                    loadFragment(TAG_MONTH) { MonthCalendarFragment() }
                     true
                 }
                 R.id.navigation_convert -> {
-                    loadFragment(dateConverterFragment)
+                    loadFragment(TAG_CONVERT) { DateConverterFragment() }
                     true
                 }
                 R.id.navigation_horoscope -> {
-                    loadFragment(horoscopeFragment)
+                    loadFragment(TAG_HOROSCOPE) { HoroscopeFragment() }
                     true
                 }
                 R.id.navigation_more -> {
-                    loadFragment(moreFragment)
+                    loadFragment(TAG_MORE) { MoreFragment() }
                     true
                 }
                 else -> false
@@ -62,9 +64,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadFragment(fragment: Fragment) {
+    private fun loadFragment(tag: String, creator: () -> Fragment) {
+        val fragment = supportFragmentManager.findFragmentByTag(tag) ?: creator()
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .commit()
+            .replace(R.id.fragment_container, fragment, tag)
+            .commitAllowingStateLoss()
     }
 }

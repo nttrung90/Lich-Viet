@@ -10,8 +10,18 @@ import com.lichviet.vannien.R
 import com.lichviet.vannien.data.WeatherRepository
 
 class DailyWeatherAdapter(
-    private val items: List<WeatherRepository.DailyItem>
+    initialItems: List<WeatherRepository.DailyItem> = emptyList()
 ) : RecyclerView.Adapter<DailyWeatherAdapter.DailyViewHolder>() {
+
+    private val items = mutableListOf<WeatherRepository.DailyItem>().apply {
+        addAll(initialItems)
+    }
+
+    fun updateData(newItems: List<WeatherRepository.DailyItem>) {
+        items.clear()
+        items.addAll(newItems)
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DailyViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_daily_weather, parent, false)

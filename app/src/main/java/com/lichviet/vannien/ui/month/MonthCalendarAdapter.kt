@@ -21,7 +21,8 @@ data class CalendarDayModel(
     val isToday: Boolean,
     val isHoangDao: Boolean,
     val isSpecial: Boolean,
-    val holidayName: String? = null
+    val holidayName: String? = null,
+    val isLeapMonth: Boolean = false
 ) {
     val isSunday: Boolean get() = (dayOfWeek == Calendar.SUNDAY)
     val isSaturday: Boolean get() = (dayOfWeek == Calendar.SATURDAY)
@@ -42,8 +43,17 @@ class MonthCalendarAdapter(
     }
 
     fun setSelected(day: CalendarDayModel) {
+        val oldIndex = days.indexOfFirst {
+            selectedDay?.let { sel ->
+                sel.solarDay == it.solarDay && sel.solarMonth == it.solarMonth && sel.solarYear == it.solarYear
+            } ?: false
+        }
         selectedDay = day
-        notifyDataSetChanged()
+        val newIndex = days.indexOfFirst {
+            it.solarDay == day.solarDay && it.solarMonth == day.solarMonth && it.solarYear == day.solarYear
+        }
+        if (oldIndex != -1) notifyItemChanged(oldIndex)
+        if (newIndex != -1 && newIndex != oldIndex) notifyItemChanged(newIndex)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DayViewHolder {
@@ -59,11 +69,24 @@ class MonthCalendarAdapter(
 
         // Tự động căn chỉnh chiều cao ô để khớp khít chiều cao bảng lịch (5 hoặc 6 hàng)
         val parent = holder.itemView.parent as? ViewGroup
-        if (parent != null && parent.height > 0) {
-            val totalRows = if (days.size > 35) 6 else 5
-            val targetHeight = parent.height / totalRows
-            if (holder.itemView.layoutParams.height != targetHeight) {
-                holder.itemView.layoutParams.height = targetHeight
+        if (parent != null) {
+            if (parent.height > 0) {
+                val totalRows = if (days.size > 35) 6 else 5
+                val targetHeight = parent.height / totalRows
+                if (holder.itemView.layoutParams.height != targetHeight) {
+                    holder.itemView.layoutParams.height = targetHeight
+                }
+            } else {
+                parent.post {
+                    if (parent.height > 0) {
+                        val totalRows = if (days.size > 35) 6 else 5
+                        val targetHeight = parent.height / totalRows
+                        if (holder.itemView.layoutParams.height != targetHeight) {
+                            holder.itemView.layoutParams.height = targetHeight
+                            holder.itemView.requestLayout()
+                        }
+                    }
+                }
             }
         }
 
@@ -79,7 +102,8 @@ class MonthCalendarAdapter(
 
         fun bind(day: CalendarDayModel, isSelected: Boolean) {
             tvSolar.text = day.solarDay.toString()
-            tvLunar.text = if (day.lunarDay == 1) "${day.lunarDay}/${day.lunarMonth}" else day.lunarDay.toString()
+            val leapSuffix = if (day.isLeapMonth) "(N)" else ""
+            tvLunar.text = if (day.lunarDay == 1) "${day.lunarDay}/${day.lunarMonth}$leapSuffix" else day.lunarDay.toString()
 
             if (!day.isCurrentMonth) {
                 // Ngày thuộc tháng trước hoặc tháng sau (ô màu xám nhạt kẻ ô)
@@ -136,8 +160,15 @@ class MonthCalendarAdapter(
             }
 
             itemView.setOnClickListener {
+                val oldIndex = days.indexOfFirst {
+                    selectedDay?.let { sel ->
+                        sel.solarDay == it.solarDay && sel.solarMonth == it.solarMonth && sel.solarYear == it.solarYear
+                    } ?: false
+                }
                 selectedDay = day
-                notifyDataSetChanged()
+                val newIndex = bindingAdapterPosition
+                if (oldIndex != -1) notifyItemChanged(oldIndex)
+                if (newIndex != -1 && newIndex != oldIndex) notifyItemChanged(newIndex)
                 onDayClick(day)
             }
         }

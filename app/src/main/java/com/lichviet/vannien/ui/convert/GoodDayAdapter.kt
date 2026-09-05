@@ -2,21 +2,15 @@ package com.lichviet.vannien.ui.convert
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.lichviet.vannien.calendar.LunarCalendarEngine
 import com.lichviet.vannien.databinding.ItemGoodDayBinding
 
 class GoodDayAdapter(
     private val onDayClick: (LunarCalendarEngine.LunarDate) -> Unit
-) : RecyclerView.Adapter<GoodDayAdapter.GoodDayViewHolder>() {
-
-    private val items = mutableListOf<LunarCalendarEngine.LunarDate>()
-
-    fun submitList(list: List<LunarCalendarEngine.LunarDate>) {
-        items.clear()
-        items.addAll(list)
-        notifyDataSetChanged()
-    }
+) : ListAdapter<LunarCalendarEngine.LunarDate, GoodDayAdapter.GoodDayViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GoodDayViewHolder {
         val binding = ItemGoodDayBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -24,10 +18,8 @@ class GoodDayAdapter(
     }
 
     override fun onBindViewHolder(holder: GoodDayViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(getItem(position))
     }
-
-    override fun getItemCount(): Int = items.size
 
     inner class GoodDayViewHolder(private val binding: ItemGoodDayBinding) : RecyclerView.ViewHolder(binding.root) {
 
@@ -47,6 +39,19 @@ class GoodDayAdapter(
             binding.tvItemGoodHours.text = hoursDisplay
 
             binding.root.setOnClickListener { onDayClick(item) }
+        }
+    }
+
+    companion object DiffCallback : DiffUtil.ItemCallback<LunarCalendarEngine.LunarDate>() {
+        override fun areItemsTheSame(oldItem: LunarCalendarEngine.LunarDate, newItem: LunarCalendarEngine.LunarDate): Boolean {
+            return oldItem.solarDay == newItem.solarDay &&
+                    oldItem.day == newItem.day &&
+                    oldItem.month == newItem.month &&
+                    oldItem.year == newItem.year
+        }
+
+        override fun areContentsTheSame(oldItem: LunarCalendarEngine.LunarDate, newItem: LunarCalendarEngine.LunarDate): Boolean {
+            return oldItem == newItem
         }
     }
 }

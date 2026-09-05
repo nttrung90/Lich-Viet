@@ -32,7 +32,7 @@ object WeatherRepository {
     )
 
     val cities = listOf(
-        "Hà Nội", "TP. Hồ Chí Minh", "Đà Nẵng", "Hải Phòng", "Cần Thơ",
+        "Hà Nội", "TP. Hồ Chí Minh", "Đà Nẵng", "Hải Phòng", "Cần Thơ", "Nha Trang",
         "An Giang", "Bà Rịa - Vũng Tàu", "Bắc Giang", "Bắc Kạn", "Bạc Liêu",
         "Bắc Ninh", "Bến Tre", "Bình Định", "Bình Dương", "Bình Phước",
         "Bình Thuận", "Cà Mau", "Cao Bằng", "Đắk Lắk", "Đắk Nông",
@@ -47,6 +47,7 @@ object WeatherRepository {
         "Vĩnh Long", "Vĩnh Phúc", "Yên Bái"
     )
 
+    @Volatile
     var currentSelectedCity: String = "Hà Nội"
 
     fun getCurrentWeather(): WeatherForecast = getWeatherForCity(currentSelectedCity)

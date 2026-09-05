@@ -17,11 +17,20 @@ class WeatherActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWeatherBinding
     private var currentCity = WeatherRepository.currentSelectedCity
+    private val hourlyAdapter = HourlyWeatherAdapter()
+    private val dailyAdapter = DailyWeatherAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWeatherBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Setup RecyclerViews
+        binding.rvHourlyWeather.layoutManager = LinearLayoutManager(this)
+        binding.rvHourlyWeather.adapter = hourlyAdapter
+
+        binding.rvDailyWeather.layoutManager = LinearLayoutManager(this)
+        binding.rvDailyWeather.adapter = dailyAdapter
 
         setupListeners()
         loadWeatherData(currentCity)
@@ -56,13 +65,9 @@ class WeatherActivity : AppCompatActivity() {
         binding.tvRainUv.text = "Khả năng có mưa: ${weather.rainProb}% - UV: ${weather.uvIndex}"
         binding.tvAirQuality.text = "Chất lượng không khí: ${weather.aqi}"
 
-        // 6 giờ tiếp theo
-        binding.rvHourlyWeather.layoutManager = LinearLayoutManager(this)
-        binding.rvHourlyWeather.adapter = HourlyWeatherAdapter(weather.hourlyForecast)
-
-        // 7 ngày tới
-        binding.rvDailyWeather.layoutManager = LinearLayoutManager(this)
-        binding.rvDailyWeather.adapter = DailyWeatherAdapter(weather.dailyForecast)
+        // Cập nhật dữ liệu dự báo
+        hourlyAdapter.updateData(weather.hourlyForecast)
+        dailyAdapter.updateData(weather.dailyForecast)
     }
 
     private fun showCitySelectorDialog() {

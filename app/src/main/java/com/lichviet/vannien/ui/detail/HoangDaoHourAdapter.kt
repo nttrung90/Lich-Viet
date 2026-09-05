@@ -10,8 +10,18 @@ import com.lichviet.vannien.R
 import com.lichviet.vannien.calendar.LunarCalendarEngine
 
 class HoangDaoHourAdapter(
-    private val items: List<LunarCalendarEngine.HoangDaoHour>
+    initialItems: List<LunarCalendarEngine.HoangDaoHour> = emptyList()
 ) : RecyclerView.Adapter<HoangDaoHourAdapter.HourViewHolder>() {
+
+    private val items = mutableListOf<LunarCalendarEngine.HoangDaoHour>().apply {
+        addAll(initialItems)
+    }
+
+    fun updateData(newItems: List<LunarCalendarEngine.HoangDaoHour>) {
+        items.clear()
+        items.addAll(newItems)
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HourViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_hoang_dao_hour, parent, false)
