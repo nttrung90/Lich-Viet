@@ -16,9 +16,9 @@
 
 ---
 
-## 📱 Các Màn Hình & Chức Năng Chính (Theo Thiết Kế 5 Ảnh Mẫu)
+## 📱 Các Màn Hình & Chức Năng Chính
 
-### 1. Tờ Lịch Ngày (Lịch Ngày - Ảnh 1)
+### 1. Tờ Lịch Ngày 
 - Hiển thị ngày Dương lịch nổi bật (chữ số to, đậm phong cách dân gian), thứ trong tuần bằng chữ in hoa.
 - Hiển thị câu **Ca dao, Tục ngữ, Thành ngữ Việt Nam** đặc sắc (ví dụ: *"Chín bỏ làm mười"*, *"Ăn quả nhớ kẻ trồng cây"*...).
 - Khung thông tin Âm lịch 3 phần:
@@ -31,7 +31,7 @@
 - Biểu tượng thời tiết nhanh trên thanh công cụ góc trái dẫn trực tiếp tới màn hình thời tiết.
 - Nút vương miện hoàng gia mở nhanh tính năng Tử Vi.
 
-### 2. Đổi Ngày Âm - Dương & Tìm Ngày Tốt (Đổi Ngày - Ảnh 2)
+### 2. Đổi Ngày Âm - Dương & Tìm Ngày Tốt 
 - Gồm 2 tab chuyển đổi: **"Đổi ngày"** và **"Tìm ngày tốt"**.
 - Bộ chọn ngày lăn bánh xe (NumberPicker) 2 chiều:
   - Khung **Dương Lịch** (Ngày, Tháng, Năm).
@@ -40,7 +40,7 @@
 - Nút bấm bo tròn **"Xem chi tiết ngày"** mở ngay bảng thông tin chi tiết của ngày đã chọn.
 - Chức năng **Tìm ngày tốt**: Lọc các ngày Hoàng Đạo trong tháng theo mục đích (Cưới hỏi, Khai trương, Động thổ, Xuất hành, Vào nhà mới...).
 
-### 3. Tử Vi Toàn Tập (Tử Vi - Ảnh 3)
+### 3. Tử Vi Toàn Tập 
 Lưới 8 mục Tử vi & Phong thủy chuyên sâu:
 1. **Tử vi năm**: Xem vận hạn công danh, tài lộc, sức khỏe, tình duyên trong năm.
 2. **Tử vi trọn đời**: Luận giải cuộc đời theo năm sinh và giới tính Nam mạng / Nữ mạng.
@@ -51,7 +51,7 @@ Lưới 8 mục Tử vi & Phong thủy chuyên sâu:
 7. **Ngày đẹp theo tuổi**: Tra cứu ngày tương sinh với bản mệnh gia chủ.
 8. **Phong thủy nhà ở**: Cung mệnh Bát Trạch (4 hướng tốt, 4 hướng xấu) và Thước Lỗ Ban phong thủy.
 
-### 4. Chi Tiết Ngày Dân Gian (Ảnh 4)
+### 4. Chi Tiết Ngày Dân Gian 
 - Thanh điều hướng ngày: `< Thứ hai, DD-MM-YYYY >`.
 - **Bảng 3 Cột Lịch Âm**: Cột NGÀY (số ngày + Can Chi), Cột THÁNG (tháng + Can Chi), Cột NĂM (năm + Can Chi).
 - **Mục Sự kiện**: Các ngày lễ truyền thống dân tộc, lễ Phật giáo, ngày kỷ niệm lịch sử.
@@ -59,7 +59,7 @@ Lưới 8 mục Tử vi & Phong thủy chuyên sâu:
 - **Mục Hướng Xuất Hành**: Chỉ rõ hướng Hỷ Thần, Tài Thần (hướng tốt nên đi) và Hạc Thần (hướng xấu nên tránh).
 - **Mục Sao Tốt - Sao Xấu**: Liệt kê đầy đủ các sao Cát Tinh, Hung Tinh, việc nên làm và việc kiêng cữ trong ngày, Tiết khí và Trực của ngày.
 
-### 5. Dự Báo Thời Tiết Chính Xác (Ảnh 5)
+### 5. Dự Báo Thời Tiết Chính Xác 
 - Hiển thị nhiệt độ lớn trắng nổi bật trên nền trời xanh (ví dụ: `29°`).
 - Icon trạng thái thời tiết, mô tả trạng thái (Mây rải rác, Nắng nhẹ, Mưa rào...).
 - Chỉ số nhiệt độ cao nhất / thấp nhất (`↓ 30°C / ↑ 25°C`).
