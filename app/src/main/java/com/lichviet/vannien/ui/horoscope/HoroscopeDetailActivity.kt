@@ -30,13 +30,60 @@ class HoroscopeDetailActivity : AppCompatActivity() {
     }
 
     private fun setupBirthYearSpinner() {
-        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-        val years = (currentYear downTo 1930).map { it.toString() }
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, years)
-        binding.spinnerBirthYear.adapter = adapter
-        // Mặc định chọn năm 1990 như trên ảnh mẫu số 3!
-        val defaultIndex = years.indexOf("1990").coerceAtLeast(0)
-        binding.spinnerBirthYear.setSelection(defaultIndex)
+        if (featureId == 9) {
+            binding.tvSpinnerLabel.text = "Bài khấn: "
+            binding.rgGender.visibility = View.GONE
+            binding.btnCalculateHoro.visibility = View.GONE
+            val prayerOptions = listOf("Tất Cả 9 Bài Văn Khấn") + HolidayRepository.vanKhanList.mapIndexed { idx, vk -> "${idx + 1}. ${vk.title}" }
+            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, prayerOptions)
+            binding.spinnerBirthYear.adapter = adapter
+            binding.spinnerBirthYear.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    displayVanKhan(position)
+                }
+                override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
+            }
+        } else {
+            val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+            val years = (currentYear downTo 1930).map { it.toString() }
+            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, years)
+            binding.spinnerBirthYear.adapter = adapter
+            // Mặc định chọn năm 1990 như trên ảnh mẫu số 3!
+            val defaultIndex = years.indexOf("1990").coerceAtLeast(0)
+            binding.spinnerBirthYear.setSelection(defaultIndex)
+        }
+    }
+
+    private fun displayVanKhan(position: Int) {
+        binding.cardInputUser.visibility = View.VISIBLE
+        binding.tvInputLabel.text = "Tuyển tập Văn Khấn Cổ Truyền Việt Nam:"
+        binding.layoutBirthInput.visibility = View.VISIBLE
+        binding.btnCalculateHoro.visibility = View.GONE
+
+        if (position <= 0) {
+            // Hiển thị toàn bộ văn khấn
+            binding.tvResultHeader.text = "9 BÀI VĂN KHẤN CỔ TRUYỀN CHUẨN PHONG TỤC"
+            val sb = StringBuilder()
+            HolidayRepository.vanKhanList.forEachIndexed { idx, vk ->
+                sb.append("════════════════════════════════════\n")
+                sb.append("BÀI ${idx + 1}: ${vk.title.uppercase()}\n")
+                sb.append("• Mục đích & Dịp cúng: ${vk.occasion}\n")
+                sb.append("────────────────────────────────────\n\n")
+                sb.append("${vk.content}\n\n\n")
+            }
+            binding.tvResultContent.text = sb.toString().trim()
+        } else {
+            val vk = HolidayRepository.vanKhanList.getOrNull(position - 1)
+            if (vk != null) {
+                binding.tvResultHeader.text = vk.title.uppercase()
+                binding.tvResultContent.text = """
+                    • Dịp thực hiện: ${vk.occasion}
+                    ────────────────────────────────────
+
+                    ${vk.content}
+                """.trimIndent()
+            }
+        }
     }
 
     private fun setupListeners() {
@@ -269,11 +316,24 @@ class HoroscopeDetailActivity : AppCompatActivity() {
                     2. CÁC HƯỚNG XẤU (NÊN TRÁNH):
                        ${batTrach.huongXau.joinToString("\n                       ")}
 
-                    3. QUY CHUẨN THƯỚC LỖ BAN PHONG THỦY:
-                       • Thước 52.2 cm: Đo khoảng thông thủy (cửa đi, cửa sổ, giếng trời). Cung tốt: Quý Nhân, Thiên Tài, Phúc Tinh, Tể Tướng. Cung xấu: Hiểm Trì, Thiên Tai, Cô Độc, Tai Hại.
-                       • Thước 42.9 cm (Dương trạch): Đo khối xây dựng (bậc cầu thang, bàn bếp, giường ngủ). Cung tốt: Tài, Nghĩa, Quan, Bản. Cung xấu: Bệnh, Ly, Kiếp, Hại.
-                       • Thước 38.8 cm (Âm phần): Đo bàn thờ, tủ thờ, mộ phần gia tiên. Cung tốt: Đinh, Vượng, Nghĩa, Quan, Hưng, Tài. Cung xấu: Hại, Khổ, Tử, Thất.
+                    3. QUY CHUẨN 3 LOẠI THƯỚC LỖ BAN:
+                       • Thước 52.2 cm (Thông thủy): Đo cửa đi, cửa sổ, giếng trời, ô thoáng. 8 cung (Quý Nhân, Hiểm Trì, Thiên Tai, Thiên Tài, Phúc Tinh, Cô Độc, Tai Hại, Tể Tướng). Mỗi cung dài 6.525 cm.
+                       • Thước 42.9 cm (Dương trạch): Đo khối xây dựng, bệ bếp, bậc cầu thang, giường ngủ. 8 cung (Tài, Bệnh, Ly, Nghĩa, Quan, Kiếp, Hại, Bản). Mỗi cung dài 5.3625 cm.
+                       • Thước 38.8 cm (Âm phần): Đo bàn thờ, tủ thờ, đồ thờ cúng gia tiên. 10 cung (Đinh, Hại, Thoái, Hưng, Vượng, Quan, Tử, Hưng, Thất, Tài). Mỗi cung dài 3.88 cm.
+
+                    4. BẢNG KÍCH THƯỚC VÀNG PHONG THỦY ĐƯỢC ƯU CHUỘNG:
+                       • Cửa chính 1 cánh (Rộng x Cao): 81 x 212 cm; 81 x 214 cm; 87 x 215 cm.
+                       • Cửa chính 2 cánh (Rộng x Cao): 109 x 212 cm; 126 x 212 cm; 133 x 214 cm.
+                       • Cửa chính 4 cánh (Rộng x Cao): 236 x 214 cm; 255 x 214 cm; 282 x 214 cm.
+                       • Cửa phòng ngủ (Rộng x Cao): 81 x 214 cm; 89 x 214 cm.
+                       • Chiều cao bàn thờ đứng: 107 cm (Thêm Đinh); 127 cm (Tiến Bảo); 133 cm (Đại Cát).
+                       • Chiều ngang bàn thờ: 107 cm; 127 cm; 153 cm; 175 cm; 197 cm; 217 cm.
+                       • Chiều sâu bàn thờ: 48 cm (Hỷ Sự); 61 cm (Tài Lộc); 69 cm (Hưng Vượng); 81 cm (Tài Trí).
                 """.trimIndent()
+            }
+
+            9 -> { // Văn khấn cổ truyền
+                displayVanKhan(binding.spinnerBirthYear.selectedItemPosition)
             }
 
             else -> {

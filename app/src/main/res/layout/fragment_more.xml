@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F7F3E9">
+    android:background="#D1E8E2">
 
     <!-- Header -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -46,6 +46,17 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <!-- Category 1: Tiện ích Dân gian & Phong thủy -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="4dp"
+                android:text="TIỆN ÍCH DÂN GIAN &amp; PHONG THỦY"
+                android:textColor="#2D3748"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
             <!-- Thước Lỗ Ban -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_thuoc_lo_ban"
@@ -54,6 +65,7 @@
                 android:layout_marginBottom="12dp"
                 android:clickable="true"
                 android:focusable="true"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="2dp">
 
@@ -88,7 +100,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="Thước 52.2cm, 42.9cm, 38.8cm phong thủy chuẩn"
+                            android:text="Thước 52.2cm, 42.9cm, 38.8cm &amp; Cung Bát Trạch"
                             android:textColor="#666666"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -109,6 +121,7 @@
                 android:layout_marginBottom="12dp"
                 android:clickable="true"
                 android:focusable="true"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="2dp">
 
@@ -134,7 +147,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/util_van_khan"
+                            android:text="Văn Khấn Cổ Truyền (9 Bài)"
                             android:textColor="#1A365D"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -143,7 +156,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="Bài cúng ngày rằm, mùng một, lễ tết, thần tài"
+                            android:text="Mùng 1, Rằm, Thần Tài, Giao Thừa, Động Thổ, Nhập Trạch..."
                             android:textColor="#666666"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -156,14 +169,15 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Cài đặt thông báo mùng 1, rằm -->
+            <!-- Lịch Ngày Lễ Âm & Dương -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/card_reminders"
+                android:id="@+id/card_holidays"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="18dp"
                 android:clickable="true"
                 android:focusable="true"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="2dp">
 
@@ -190,6 +204,142 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="@string/util_holidays"
+                            android:textColor="#1A365D"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Tra cứu ngày Tết, ngày hội dân tộc và ngày lễ lớn trong năm"
+                            android:textColor="#666666"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_chevron_right" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Category 2: Nghệ thuật Mỹ thuật Dân gian -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="4dp"
+                android:text="MỸ THUẬT &amp; VĂN HÓA DÂN TỘC"
+                android:textColor="#2D3748"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <!-- Bộ sưu tập 23 Tranh Dân Gian -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_folk_gallery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="18dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_wallpaper"
+                        app:tint="#B71C1C" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="14dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/util_folk_gallery"
+                            android:textColor="#1A365D"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Chiêm ngưỡng 23 kiệt tác Đông Hồ, Hàng Trống &amp; ý nghĩa"
+                            android:textColor="#666666"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_chevron_right" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Category 3: Cài đặt & Hệ thống -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="4dp"
+                android:text="CÀI ĐẶT &amp; THÔNG TIN ỨNG DỤNG"
+                android:textColor="#2D3748"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <!-- Cài đặt thông báo mùng 1, rằm -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_reminders"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_settings"
+                        app:tint="#1B5E20" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="14dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:text="@string/util_reminders"
                             android:textColor="#1A365D"
                             android:textSize="16sp"
@@ -199,7 +349,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="Nhắc nhở chuẩn bị lễ vật ngày sóc vọng"
+                            android:text="Tùy chọn thông báo ngày Sóc (Mùng 1), Vọng (Rằm 15)"
                             android:textColor="#666666"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -217,9 +367,10 @@
                 android:id="@+id/card_about"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="24dp"
                 android:clickable="true"
                 android:focusable="true"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="2dp">
 

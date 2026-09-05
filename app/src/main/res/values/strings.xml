@@ -62,21 +62,23 @@
 
     <!-- Weather -->
     <string name="default_city">Hà Nội</string>
-    <string name="rain_prob_uv_format">Khả năng có mưa: %d%% - UV: %s</string>
+    <string name="rain_prob_uv_format">Khả năng có mưa: %1$d%% - UV: %2$s</string>
     <string name="air_quality_format">Chất lượng không khí: %s</string>
     <string name="next_6_hours">Thời tiết 6 giờ tiếp theo</string>
     <string name="next_7_days">Dự báo 7 ngày tới</string>
-    <string name="temp_min_max_format">↓ %d°C    ↑ %d°C</string>
+    <string name="temp_min_max_format">↓ %1$d°C    ↑ %2$d°C</string>
     <string name="temp_format">%d°</string>
 
     <!-- More / Utilities -->
     <string name="title_more">Mở Rộng &amp; Tiện Ích</string>
-    <string name="util_thuoc_lo_ban">Thước Lỗ Ban</string>
+    <string name="util_thuoc_lo_ban">Thước Lỗ Ban &amp; Phong Thủy</string>
     <string name="util_van_khan">Văn khấn cổ truyền</string>
+    <string name="util_holidays">Lịch Ngày Lễ Truyền Thống</string>
+    <string name="util_folk_gallery">Bộ sưu tập Tranh Dân Gian (23 bức)</string>
     <string name="util_reminders">Cài đặt nhắc ngày Rằm, Mùng 1</string>
     <string name="util_change_bg">Đổi hình nền dân gian</string>
     <string name="util_about">Giới thiệu ứng dụng</string>
-    <string name="app_version">Phiên bản 1.0.0 (Hỗ trợ Android 8.0+)</string>
+    <string name="app_version">Phiên bản 1.1.0 (Hỗ trợ Android 8.0+)</string>
 
     <!-- Days of week -->
     <string name="day_monday">THỨ HAI</string>
