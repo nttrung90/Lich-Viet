@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="62dp"
+    android:layout_height="58dp"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="2dp"
-    android:background="?android:attr/selectableItemBackground">
+    android:padding="2dp">
 
     <TextView
         android:id="@+id/tv_cell_solar_day"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="20"
-        android:textColor="@color/solar_day_color"
+        android:textColor="#1A202C"
         android:textSize="17sp"
         android:textStyle="bold" />
 
@@ -20,16 +19,17 @@
         android:id="@+id/tv_cell_lunar_day"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
         android:text="10/7"
-        android:textColor="#388E3C"
+        android:textColor="#2E7D32"
         android:textSize="11sp" />
 
     <!-- Dot indicator for Good Day / Holiday -->
     <View
         android:id="@+id/dot_indicator"
-        android:layout_width="4dp"
-        android:layout_height="4dp"
+        android:layout_width="5dp"
+        android:layout_height="5dp"
         android:layout_marginTop="2dp"
-        android:background="@drawable/bg_tab_selected" />
+        android:background="@drawable/bg_dot_gold" />
 
 </LinearLayout>
